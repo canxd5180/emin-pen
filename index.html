@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Emin Pen - Dijital Katalog ve Hesaplama</title>
+    <title>Emin Pen - Niğde Merkez Dijital Katalog ve Hesaplama</title>
     <meta name="theme-color" content="#121212">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -12,11 +12,14 @@
             --bg-color: #121212;
             --card-bg: #1e1e1e;
             --accent: #f38218;
+            --accent-glow: rgba(243, 130, 24, 0.35);
             --text-main: #ffffff;
             --text-sub: #b3b3b3;
+            --success: #25d366;
+            --gold: #ffc107;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-main); padding: 15px 10px; display: flex; justify-content: center; overflow-x: hidden; }
         
         .container { width: 100%; max-width: 450px; }
@@ -34,7 +37,7 @@
             font-size: 38px; font-weight: 900; color: var(--accent); letter-spacing: 4px;
             animation: logoGlowPulse 1.8s infinite alternate ease-in-out, zoomInLogo 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .splash-sub { color: var(--text-sub); font-size: 11px; margin-top: 6px; letter-spacing: 2px; animation: fadeIn 1s ease 0.4s forwards; opacity: 0; }
+        .splash-sub { color: var(--text-sub); font-size: 11px; margin-top: 6px; letter-spacing: 2px; animation: fadeIn 1s ease 0.4s forwards; opacity: 0; text-align: center; }
         .splash-loader { width: 140px; height: 3px; background: #222; margin-top: 25px; border-radius: 3px; overflow: hidden; }
         .splash-loader-bar { width: 0%; height: 100%; background: var(--accent); animation: loadBar 1.8s cubic-bezier(0.65, 0, 0.35, 1) forwards; box-shadow: 0 0 10px var(--accent); }
 
@@ -44,60 +47,80 @@
         @keyframes fadeOutSplash { 0% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; pointer-events: none; } }
         @keyframes fadeIn { to { opacity: 1; } }
 
-        @keyframes slideInRight { from { opacity: 0; transform: translateX(30px) scale(0.98); } to { opacity: 1; transform: translateX(0) scale(1); } }
-        @keyframes cardPopIn { 0% { opacity: 0; transform: translateY(20px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes cardPopIn { 0% { opacity: 0; transform: translateY(15px) scale(0.97); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
         @keyframes cardRemove { 0% { opacity: 1; transform: translateX(0); max-height: 200px; } 100% { opacity: 0; transform: translateX(-100%); max-height: 0; margin: 0; padding: 0; } }
-        @keyframes pulseTotal { 0% { transform: scale(1); } 50% { transform: scale(1.03); border-color: #ffffff; } 100% { transform: scale(1); } }
+        @keyframes pulseTotal { 0% { transform: scale(1); } 50% { transform: scale(1.02); border-color: #ffffff; } 100% { transform: scale(1); } }
 
-        .animated-page { animation: slideInRight 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        .animated-page { animation: slideInRight 0.35s cubic-bezier(0.25, 1, 0.5, 1); }
 
         .brand-header { 
-            text-align: center; margin-bottom: 20px; background: #000; padding: 15px; 
-            border-radius: 12px; border: 2px solid var(--accent); box-shadow: 0 0 15px rgba(243, 130, 24, 0.2);
+            text-align: center; margin-bottom: 20px; background: #000; padding: 16px 12px; 
+            border-radius: 14px; border: 2px solid var(--accent); box-shadow: 0 4px 20px var(--accent-glow);
+            position: relative; overflow: hidden;
         }
         .brand-header h1 { color: var(--accent); font-size: 28px; font-weight: 900; letter-spacing: 2px; }
         .brand-header p { color: var(--text-sub); font-size: 11px; margin-top: 2px; }
+        
+        .experience-badge {
+            display: inline-flex; align-items: center; gap: 6px; background: rgba(243, 130, 24, 0.15);
+            border: 1px solid var(--accent); color: var(--accent); font-size: 11px; font-weight: 800;
+            padding: 4px 10px; border-radius: 20px; margin-top: 8px; letter-spacing: 0.5px;
+        }
 
-        /* --- FOTOĞRAFLI KATEGORİ KARTLARI --- */
         .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .cat-card {
             background: var(--card-bg); border: 1px solid #333; border-bottom: 4px solid var(--accent);
-            border-radius: 14px; text-align: center; cursor: pointer; overflow: hidden;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); animation: cardPopIn 0.4s ease backwards;
-            display: flex; flex-direction: column; align-items: center;
+            padding: 20px 10px; border-radius: 14px; text-align: center; cursor: pointer;
+            transition: all 0.25s ease; animation: cardPopIn 0.4s ease backwards;
         }
         .cat-card.full-width { grid-column: span 2; }
-        .cat-card:active { transform: scale(0.92); }
-        .cat-card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 6px 20px rgba(243, 130, 24, 0.25); }
-        
-        .cat-img-box { width: 100%; height: 110px; overflow: hidden; background: #2a2a2a; position: relative; }
-        .cat-card.full-width .cat-img-box { height: 130px; }
-        .cat-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
-        .cat-card:hover .cat-img { transform: scale(1.08); }
-        .cat-title-box { padding: 12px 8px; width: 100%; background: var(--card-bg); }
-        .cat-title { font-size: 13px; font-weight: bold; color: var(--text-main); display: block; }
+        .cat-card:active { transform: scale(0.94); }
+        .cat-card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 6px 20px var(--accent-glow); }
+
+        .cat-icon-wrap {
+            width: 54px; height: 54px; margin: 0 auto 10px; border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(243,130,24,0.25), rgba(243,130,24,0.05));
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid rgba(243,130,24,0.4);
+        }
+        .cat-icon-wrap svg { width: 30px; height: 30px; }
+        .cat-title { font-size: 14px; font-weight: 700; color: var(--text-main); }
+
+        .section-banner {
+            display: flex; align-items: center; gap: 14px; background: var(--card-bg);
+            border: 1px solid #333; border-left: 5px solid var(--accent); border-radius: 12px;
+            padding: 14px 16px; margin-bottom: 16px; animation: cardPopIn 0.3s ease;
+        }
+        .section-banner .banner-icon {
+            width: 50px; height: 50px; flex-shrink: 0; border-radius: 12px;
+            background: radial-gradient(circle at 30% 30%, rgba(243,130,24,0.3), rgba(243,130,24,0.05));
+            display: flex; align-items: center; justify-content: center; border: 1px solid rgba(243,130,24,0.4);
+        }
+        .section-banner .banner-icon svg { width: 30px; height: 30px; }
+        .section-banner .banner-text h3 { font-size: 15px; color: var(--text-main); margin-bottom: 3px; }
+        .section-banner .banner-text p { font-size: 11px; color: var(--text-sub); }
 
         .item-card { 
             background: var(--card-bg); border-left: 5px solid var(--accent); 
             border-radius: 12px; padding: 15px; margin-bottom: 15px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4); animation: cardPopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4); animation: cardPopIn 0.35s ease;
         }
-        .item-card.removing { animation: cardRemove 0.4s forwards; }
+        .item-card.removing { animation: cardRemove 0.38s forwards; }
         .item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .remove-btn { background: #dc2626; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; }
 
         label { display: block; font-size: 12px; color: var(--text-sub); margin-bottom: 6px; font-weight: 600; }
         select, input { 
             width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #444; 
-            border-radius: 8px; color: white; font-size: 14px; outline: none;
+            border-radius: 8px; color: white; font-size: 14px; outline: none; transition: border-color 0.2s;
         }
         select:focus, input:focus { border-color: var(--accent); }
 
-        /* TAB & PREVIEW STYLES */
         .tab-group { display: flex; gap: 8px; margin-bottom: 15px; }
         .tab-btn {
             flex: 1; padding: 10px; background: #2a2a2a; border: 1px solid #444; color: var(--text-sub);
-            border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; transition: all 0.3s; text-align: center;
+            border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; transition: all 0.25s; text-align: center;
         }
         .tab-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
 
@@ -105,17 +128,14 @@
         .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; color: var(--text-main); }
         .checkbox-item input { width: auto; }
 
-        .preview-img { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; border: 1px solid #333; }
-
-        /* RENK ÖNİZLEME DAİRESİ */
         .color-select-box { display: flex; align-items: center; gap: 10px; }
         .color-indicator { 
-            width: 24px; height: 24px; border-radius: 50%; border: 2px solid #555; 
+            width: 26px; height: 26px; border-radius: 50%; border: 2px solid #555; 
             box-shadow: 0 0 5px rgba(0,0,0,0.5); flex-shrink: 0; transition: background-color 0.3s, border-color 0.3s;
         }
         
         .total-box { background: #000; border: 2px solid var(--accent); padding: 18px; border-radius: 12px; text-align: center; margin-bottom: 20px; }
-        .total-box.updated { animation: pulseTotal 0.4s ease; }
+        .total-box.updated { animation: pulseTotal 0.35s ease; }
         .total-box h2 { font-size: 32px; color: var(--accent); margin-top: 4px; font-weight: bold; }
 
         .btn-group { display: flex; flex-direction: column; gap: 10px; }
@@ -124,97 +144,171 @@
         .main-btn { 
             width: 100%; padding: 14px; border: none; border-radius: 10px; font-weight: bold; 
             text-align: center; cursor: pointer; text-decoration: none; display: flex; 
-            align-items: center; justify-content: center; gap: 8px; font-size: 14px;
+            align-items: center; justify-content: center; gap: 8px; font-size: 14px; transition: transform 0.1s, opacity 0.2s;
         }
-        .main-btn:active { transform: scale(0.96); }
+        .main-btn:active { transform: scale(0.96); opacity: 0.9; }
         .add-btn { background: #2a2a2a; color: var(--accent); border: 1.5px dashed var(--accent); flex: 2; }
         .reset-btn { background: #333; color: #ff5555; border: 1.5px solid #ff5555; flex: 1; }
+        .copy-btn { background: #222; color: #fff; border: 1px solid #555; margin-bottom: 10px; }
         .back-btn { background: #2a2a2a; color: white; margin-bottom: 15px; border: 1px solid #444; }
         
-        .wa-btn { background: #25d366; color: white; }
+        .wa-btn { background: var(--success); color: white; }
         .wa-btn-2 { background: #128c7e; color: white; }
         .call-btn { background: #3498db; color: white; }
         .insta-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; }
         .maps-btn { background: #4285F4; color: white; }
+
+        .trust-badges {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+            margin-top: 20px; padding: 12px; background: #181818; border-radius: 12px; border: 1px solid #2a2a2a;
+            text-align: center;
+        }
+        .trust-item { font-size: 10px; color: var(--text-sub); display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .trust-item span { font-size: 16px; }
+
+        .quick-info-banner {
+            background: linear-gradient(135deg, rgba(243, 130, 24, 0.15) 0%, rgba(0, 0, 0, 0.4) 100%);
+            border: 1px solid var(--accent); border-radius: 12px;
+            padding: 12px 14px; margin-top: 12px; display: flex; align-items: center; gap: 12px;
+        }
+        .quick-info-icon { font-size: 24px; flex-shrink: 0; }
+        .quick-info-text h5 { font-size: 12px; color: var(--accent); font-weight: 800; letter-spacing: 0.3px; }
+        .quick-info-text p { font-size: 10.5px; color: var(--text-sub); margin-top: 2px; line-height: 1.3; }
+
+        .reviews-card {
+            background: #181818; border: 1px solid #2a2a2a; border-radius: 12px;
+            padding: 12px 15px; margin-top: 12px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .reviews-info h4 { font-size: 12px; color: var(--text-main); }
+        .reviews-info p { font-size: 10px; color: var(--text-sub); }
+        .stars { color: var(--gold); font-size: 12px; letter-spacing: 1px; }
+
+        #toast {
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: var(--accent); color: #000; padding: 10px 20px; border-radius: 20px;
+            font-size: 13px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 10000;
+        }
+        #toast.show { transform: translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
 
 <div id="splash-screen">
     <div class="splash-logo">EMİN-PEN</div>
-    <div class="splash-sub">İnşaat Plastik Sanayi ve Tic. Ltd. Şti.</div>
+    <div class="splash-sub">Niğde'de 10 Yıllık Tecrübe & Temiz İşçilik<br>İnşaat Plastik San. ve Tic. Ltd. Şti.</div>
     <div class="splash-loader"><div class="splash-loader-bar"></div></div>
 </div>
 
+<div id="toast">Teklif metni kopyalandı!</div>
+
 <div class="container">
 
-    <!-- EN ÜST BRAND HEADER -->
     <div class="brand-header">
         <h1>EMİN-PEN</h1>
         <p>İnşaat Plastik Sanayi ve Tic. Ltd. Şti.</p>
+        <div class="experience-badge">
+            ⚡ 10 YILDIR NİĞDE MERKEZ'DE
+        </div>
     </div>
 
-    <!-- EKRAN 1: ANA KATEGORİ MENÜSÜ (FOTOĞRAFLI) -->
+    <!-- EKRAN 1: ANA KATEGORİ MENÜSÜ -->
     <div id="menu-view" class="animated-page">
         <label style="margin-bottom:12px; font-size:14px; text-align:center;">Lütfen İşlem Seçiniz:</label>
         <div class="category-grid">
-            
             <div class="cat-card" onclick="openCategory('sineklik')">
-                <div class="cat-img-box">
-                    <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80" alt="Sineklik" class="cat-img">
+                <div class="cat-icon-wrap">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="8" y="8" width="48" height="48" rx="4" stroke="#f38218" stroke-width="3"/>
+                        <path d="M8 20h48M8 32h48M8 44h48M20 8v48M32 8v48M44 8v48" stroke="#f38218" stroke-width="1.4" opacity="0.6"/>
+                    </svg>
                 </div>
-                <div class="cat-title-box">
-                    <span class="cat-title">🦟 Sineklik Fiyat Al</span>
-                </div>
+                <span class="cat-title">Sineklik Fiyat Al</span>
             </div>
-
             <div class="cat-card" onclick="openCategory('pvc')">
-                <div class="cat-img-box">
-                    <img src="https://images.unsplash.com/photo-1503708998063-246a62e3d9f9?auto=format&fit=crop&w=400&q=80" alt="PVC Doğrama" class="cat-img">
+                <div class="cat-icon-wrap">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="10" y="10" width="44" height="44" rx="3" stroke="#f38218" stroke-width="3"/>
+                        <path d="M32 10v44M10 32h44" stroke="#f38218" stroke-width="3"/>
+                        <path d="M16 16l10 10M48 16L38 26" stroke="#f38218" stroke-width="1.6" opacity="0.6"/>
+                    </svg>
                 </div>
-                <div class="cat-title-box">
-                    <span class="cat-title">🪟 PVC Doğrama</span>
-                </div>
+                <span class="cat-title">PVC Fiyat Al</span>
             </div>
-
             <div class="cat-card" onclick="openCategory('cambalkon')">
-                <div class="cat-img-box">
-                    <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=400&q=80" alt="Cam Balkon" class="cat-img">
+                <div class="cat-icon-wrap">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="6" y="14" width="52" height="38" rx="3" stroke="#f38218" stroke-width="3"/>
+                        <path d="M18 14v38M30 14v38M42 14v38" stroke="#f38218" stroke-width="2" opacity="0.7"/>
+                        <path d="M6 14L18 6h28l12 8" stroke="#f38218" stroke-width="2.4"/>
+                    </svg>
                 </div>
-                <div class="cat-title-box">
-                    <span class="cat-title">🏢 Cam Balkon</span>
-                </div>
+                <span class="cat-title">Cam Balkon</span>
             </div>
-
             <div class="cat-card" onclick="openCategory('tamir')">
-                <div class="cat-img-box">
-                    <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=400&q=80" alt="Tamir Servis" class="cat-img">
+                <div class="cat-icon-wrap">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M42 12a12 12 0 0 0-15.8 14L10 42.2a5 5 0 0 0 7 7L33.2 33a12 12 0 0 0 14-15.8l-7.4 7.4-6-6L42 12z" stroke="#f38218" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+                    </svg>
                 </div>
-                <div class="cat-title-box">
-                    <span class="cat-title">🛠️ Tamir & Servis</span>
-                </div>
+                <span class="cat-title">Tamir & Servis</span>
             </div>
-
             <div class="cat-card full-width" onclick="openCategory('dusakabin')">
-                <div class="cat-img-box">
-                    <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80" alt="Duşakabin" class="cat-img">
+                <div class="cat-icon-wrap">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="12" y="10" width="40" height="46" rx="3" stroke="#f38218" stroke-width="3"/>
+                        <path d="M32 10v46" stroke="#f38218" stroke-width="2" opacity="0.7"/>
+                        <path d="M42 22c2.5 3 4 5.4 4 7.6a4 4 0 1 1-8 0c0-2.2 1.5-4.6 4-7.6z" fill="#f38218" opacity="0.85"/>
+                    </svg>
                 </div>
-                <div class="cat-title-box">
-                    <span class="cat-title">🚿 Duşakabin Fiyat Al</span>
-                </div>
+                <span class="cat-title">Duşakabin Fiyat Al</span>
             </div>
-
         </div>
 
-        <div class="btn-group" style="margin-top:20px;">
-            <a href="https://instagram.com/eminpen51" target="_blank" class="main-btn insta-btn">📷 Instagram (@eminpen51)</a>
-            <a href="https://maps.app.goo.gl/2WEyD7jspvgbkfd46" target="_blank" class="main-btn maps-btn">📍 Konum ve Yol Tarifi</a>
+        <div class="btn-group">
+            <a href="https://instagram.com/eminpen51" target="_blank" class="main-btn insta-btn" onclick="vibrate(); playClickSound();">📷 Instagram (@eminpen51)</a>
+            <a href="https://maps.app.goo.gl/2WEyD7jspvgbkfd46" target="_blank" class="main-btn maps-btn" onclick="vibrate(); playClickSound();">📍 Konum ve Yol Tarifi (Niğde Merkez)</a>
+        </div>
+
+        <div class="trust-badges">
+            <div class="trust-item"><span>✨</span> Temiz İşçilik</div>
+            <div class="trust-item"><span>🏆</span> 10 Yıllık Güven</div>
+            <div class="trust-item"><span>📐</span> Ücretsiz Ölçü / Keşif</div>
+        </div>
+
+        <div class="quick-info-banner">
+            <div class="quick-info-icon">🚚</div>
+            <div class="quick-info-text">
+                <h5>NİĞDE MERKEZ İÇİ ÜCRETSİZ KEŞİF</h5>
+                <p>Ölçülerinizi sistemden hesaplayın veya ustamızı çağırın; adresinizde randevulu yerinde ölçü alalım!</p>
+            </div>
+        </div>
+
+        <div class="reviews-card">
+            <div class="reviews-info">
+                <h4>Niğde Merkez'in Tercihi</h4>
+                <p>1000+ Başarılı Montaj & Yüksek Müşteri Memnuniyeti</p>
+            </div>
+            <div class="stars">★★★★★</div>
         </div>
     </div>
 
     <!-- EKRAN 2: SİNEKLİK HESAPLAMA FORMU -->
     <div id="sineklik-view" style="display: none;">
         <button class="main-btn back-btn" onclick="showMenu()">← Ana Menüye Dön</button>
+
+        <div class="section-banner">
+            <div class="banner-icon">
+                <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="8" y="8" width="48" height="48" rx="4" stroke="#f38218" stroke-width="3"/>
+                    <path d="M8 20h48M8 32h48M8 44h48M20 8v48M32 8v48M44 8v48" stroke="#f38218" stroke-width="1.4" opacity="0.6"/>
+                </svg>
+            </div>
+            <div class="banner-text">
+                <h3>Sineklik Fiyat Hesaplama</h3>
+                <p>Model, renk ve ölçü seçerek anlık fiyat alın</p>
+            </div>
+        </div>
         
         <div id="itemList"></div>
 
@@ -228,15 +322,31 @@
             <h2 id="grandTotal">0 TL</h2>
         </div>
 
+        <button class="main-btn copy-btn" onclick="copyOfferText('sineklik')">📋 Teklifi Metin Olarak Kopyala</button>
+
         <div class="btn-group">
-            <a id="whatsappLink1" href="#" target="_blank" class="main-btn wa-btn">💬 1. Hat Sipariş Ver (0551 645 26 06)</a>
-            <a id="whatsappLink2" href="#" target="_blank" class="main-btn wa-btn-2">💬 2. Hat Sipariş Ver (0545 716 06 86)</a>
+            <a id="whatsappLink1" href="#" target="_blank" class="main-btn wa-btn" onclick="vibrate(); playClickSound();">💬 1. Hat Sipariş Ver (0551 645 26 06)</a>
+            <a id="whatsappLink2" href="#" target="_blank" class="main-btn wa-btn-2" onclick="vibrate(); playClickSound();">💬 2. Hat Sipariş Ver (0545 716 06 86)</a>
         </div>
     </div>
 
     <!-- EKRAN 3: DUŞAKABİN HESAPLAMA FORMU -->
     <div id="dusakabin-view" style="display: none;">
         <button class="main-btn back-btn" onclick="showMenu()">← Ana Menüye Dön</button>
+
+        <div class="section-banner">
+            <div class="banner-icon">
+                <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="12" y="10" width="40" height="46" rx="3" stroke="#f38218" stroke-width="3"/>
+                    <path d="M32 10v46" stroke="#f38218" stroke-width="2" opacity="0.7"/>
+                    <path d="M42 22c2.5 3 4 5.4 4 7.6a4 4 0 1 1-8 0c0-2.2 1.5-4.6 4-7.6z" fill="#f38218" opacity="0.85"/>
+                </svg>
+            </div>
+            <div class="banner-text">
+                <h3>Duşakabin Fiyat Hesaplama</h3>
+                <p>Mika veya cam modeliniz için anlık teklif alın</p>
+            </div>
+        </div>
         
         <div class="tab-group">
             <div id="tab-mika" class="tab-btn active" onclick="switchDusaTab('mika')">🔲 Plastik Mika</div>
@@ -244,20 +354,17 @@
         </div>
 
         <div class="item-card">
-            <!-- Önizleme Görseli -->
-            <img id="dusa-preview-img" class="preview-img" src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=500&q=80" alt="Duşakabin Görseli">
-
             <!-- MİKA FORM -->
             <div id="dusa-mika-form">
                 <label>Model Çeşidi</label>
-                <select id="mika-model" onchange="calcDusa()">
+                <select id="mika-model" onchange="playClickSound(); calcDusa()">
                     <option value="duzkare">Düz / Kare Mika</option>
                     <option value="oval">Oval Mika</option>
                 </select>
 
                 <div style="margin-top:10px;">
                     <label>Profil Rengi</label>
-                    <select id="mika-profil" onchange="calcDusa()">
+                    <select id="mika-profil" onchange="playClickSound(); calcDusa()">
                         <option value="beyaz">Beyaz Profil</option>
                         <option value="renkli">Eloksal / Renkli Profil</option>
                     </select>
@@ -267,7 +374,7 @@
             <!-- CAM FORM -->
             <div id="dusa-cam-form" style="display:none;">
                 <label>Profil Rengi</label>
-                <select id="cam-profil" onchange="calcDusa()">
+                <select id="cam-profil" onchange="playClickSound(); calcDusa()">
                     <option value="eloksal">Eloksal (Gümüş)</option>
                     <option value="altin">Altın Sarısı</option>
                     <option value="antrasit">Antrasit Gri</option>
@@ -275,7 +382,7 @@
 
                 <div style="margin-top:10px;">
                     <label>Cam Tipi</label>
-                    <select id="cam-tipi" onchange="calcDusa()">
+                    <select id="cam-tipi" onchange="playClickSound(); calcDusa()">
                         <option value="seffaf">Şeffaf Cam</option>
                         <option value="kumlama">Kumlama / Desenli Cam</option>
                     </select>
@@ -283,11 +390,11 @@
 
                 <div class="checkbox-group">
                     <label class="checkbox-item">
-                        <input type="checkbox" id="chk-karolaj" onchange="calcDusa()">
+                        <input type="checkbox" id="chk-karolaj" onchange="playClickSound(); calcDusa()">
                         Karolaj (Siyah Kare Çıtalı) (+1.500 TL)
                     </label>
                     <label class="checkbox-item">
-                        <input type="checkbox" id="chk-fume" onchange="calcDusa()">
+                        <input type="checkbox" id="chk-fume" onchange="playClickSound(); calcDusa()">
                         Füme Cam (+1.300 TL)
                     </label>
                 </div>
@@ -319,29 +426,149 @@
             <h2 id="dusaGrandTotal">0 TL</h2>
         </div>
 
+        <button class="main-btn copy-btn" onclick="copyOfferText('dusakabin')">📋 Teklifi Metin Olarak Kopyala</button>
+
         <div class="btn-group">
-            <a id="dusaWhatsappLink1" href="#" target="_blank" class="main-btn wa-btn">💬 1. Hat Sipariş Ver (0551 645 26 06)</a>
-            <a id="dusaWhatsappLink2" href="#" target="_blank" class="main-btn wa-btn-2">💬 2. Hat Sipariş Ver (0545 716 06 86)</a>
+            <a id="dusaWhatsappLink1" href="#" target="_blank" class="main-btn wa-btn" onclick="vibrate(); playClickSound();">💬 1. Hat Sipariş Ver (0551 645 26 06)</a>
+            <a id="dusaWhatsappLink2" href="#" target="_blank" class="main-btn wa-btn-2" onclick="vibrate(); playClickSound();">💬 2. Hat Sipariş Ver (0545 716 06 86)</a>
         </div>
     </div>
 
     <!-- EKRAN 4: DİĞER KATEGORİ BİLGİ ALANI -->
     <div id="other-view" style="display: none; text-align: center; padding: 20px 0;">
         <button class="main-btn back-btn" onclick="showMenu()">← Ana Menüye Dön</button>
-        <img id="other-img" src="" alt="Kategori Görseli" class="preview-img" style="display:none; height:200px;">
+        <div class="cat-icon-wrap" id="other-icon-wrap" style="margin-bottom:14px;"></div>
         <h3 id="other-title" style="color:var(--accent); margin-bottom:10px;"></h3>
         <p id="other-desc" style="color:var(--text-sub); font-size:14px; margin-bottom:20px;">
             Bu kategoriye özel ölçü ve detaylı teklif almak için lütfen doğrudan WhatsApp hatlarımızdan iletişime geçiniz.
         </p>
-        <div class="btn-group" id="other-btn-group">
-            <a href="https://wa.me/905516452606?text=Merhaba,%20fiyat%20bilgisi%20almak%20istiyorum." target="_blank" class="main-btn wa-btn">💬 WhatsApp ile Teklif Al</a>
-        </div>
+        <div class="btn-group" id="other-btn-group"></div>
     </div>
 
 </div>
 
 <script>
+    /* --- ORİJİNAL PARA / KASA SESİ SİSTEMİ --- */
+    let audioCtx = null;
+
+    function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+    }
+
+    // Butonlar için hafif tıkırtı
+    function playClickSound() {
+        try {
+            initAudio();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.04);
+            
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.04);
+        } catch(e) {}
+    }
+
+    // 💰 KLASİK PARA SESİ (Her eklemede, silmede ve fiyat değişiminde çalar)
+    function playCashSound() {
+        try {
+            initAudio();
+            const now = audioCtx.currentTime;
+            
+            // Çınlama (Madeni para metal sesi)
+            const osc1 = audioCtx.createOscillator();
+            const gain1 = audioCtx.createGain();
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(987.77, now); // B5
+            osc1.frequency.exponentialRampToValueAtTime(1318.51, now + 0.12); // E6
+            gain1.gain.setValueAtTime(0.22, now);
+            gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+            osc1.connect(gain1);
+            gain1.connect(audioCtx.destination);
+            osc1.start(now);
+            osc1.stop(now + 0.35);
+
+            // Tok Kasa Sesi / Kapanma Desteği
+            const osc2 = audioCtx.createOscillator();
+            const gain2 = audioCtx.createGain();
+            osc2.type = 'triangle';
+            osc2.frequency.setValueAtTime(320, now + 0.06);
+            osc2.frequency.exponentialRampToValueAtTime(160, now + 0.22);
+            gain2.gain.setValueAtTime(0.18, now + 0.06);
+            gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+            osc2.connect(gain2);
+            gain2.connect(audioCtx.destination);
+            osc2.start(now + 0.06);
+            osc2.stop(now + 0.25);
+        } catch(e) {}
+    }
+
+    function playSuccessSound() {
+        try {
+            initAudio();
+            const now = audioCtx.currentTime;
+            const osc1 = audioCtx.createOscillator();
+            const gain1 = audioCtx.createGain();
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(523.25, now);
+            gain1.gain.setValueAtTime(0.2, now);
+            gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+            osc1.connect(gain1);
+            gain1.connect(audioCtx.destination);
+            osc1.start(now);
+            osc1.stop(now + 0.1);
+
+            const osc2 = audioCtx.createOscillator();
+            const gain2 = audioCtx.createGain();
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(659.25, now + 0.08);
+            gain2.gain.setValueAtTime(0.25, now + 0.08);
+            gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+            osc2.connect(gain2);
+            gain2.connect(audioCtx.destination);
+            osc2.start(now + 0.08);
+            osc2.stop(now + 0.22);
+        } catch(e) {}
+    }
+
+    const otherIcons = {
+        pvc: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="44" height="44" rx="3" stroke="#f38218" stroke-width="3"/><path d="M32 10v44M10 32h44" stroke="#f38218" stroke-width="3"/><path d="M16 16l10 10M48 16L38 26" stroke="#f38218" stroke-width="1.6" opacity="0.6"/></svg>`,
+        cambalkon: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="14" width="52" height="38" rx="3" stroke="#f38218" stroke-width="3"/><path d="M18 14v38M30 14v38M42 14v38" stroke="#f38218" stroke-width="2" opacity="0.7"/><path d="M6 14L18 6h28l12 8" stroke="#f38218" stroke-width="2.4"/></svg>`,
+        tamir: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M42 12a12 12 0 0 0-15.8 14L10 42.2a5 5 0 0 0 7 7L33.2 33a12 12 0 0 0 14-15.8l-7.4 7.4-6-6L42 12z" stroke="#f38218" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg>`
+    };
+
+    let latestSineklikMsg = "";
+    let latestDusakabinMsg = "";
+
+    function vibrate() {
+        if ("vibrate" in navigator) {
+            navigator.vibrate(15);
+        }
+    }
+
+    function showToast(text) {
+        const toast = document.getElementById('toast');
+        toast.innerText = text;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
     function openCategory(type) {
+        vibrate();
+        playClickSound();
         document.getElementById('menu-view').style.display = 'none';
         let targetView;
         if (type === 'sineklik') {
@@ -358,48 +585,48 @@
         targetView.classList.add('animated-page');
 
         if(type === 'sineklik') {
-            if(itemCount === 0) addSineklik();
+            if(itemCount === 0) addSineklik(true);
         } else if (type === 'dusakabin') {
             calcDusa();
         } else if (type === 'tamir') {
+            document.getElementById('other-icon-wrap').innerHTML = otherIcons.tamir;
             document.getElementById('other-title').innerText = 'Tamir & Servis Hizmeti';
             document.getElementById('other-desc').innerText = 'Tamir, bakım ve servis talepleriniz için doğrudan hattımızı arayabilir veya WhatsApp üzerinden ulaşabilirsiniz.';
             
-            let otherImg = document.getElementById('other-img');
-            otherImg.src = "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80";
-            otherImg.style.display = 'block';
-
             let tamirWpMsg = encodeURIComponent("Merhaba Emin Pen, Tamir ve Servis talebinde bulunmak istiyorum.");
             
             document.getElementById('other-btn-group').innerHTML = `
-                <a href="tel:05521594151" class="main-btn call-btn">📞 Tamir Hattını Ara (0552 159 41 51)</a>
-                <a href="https://wa.me/905521594151?text=${tamirWpMsg}" target="_blank" class="main-btn wa-btn">💬 WhatsApp ile Servis Çağır</a>
+                <a href="tel:05521594151" class="main-btn call-btn" onclick="vibrate(); playClickSound();">📞 Tamir Hattını Ara (0552 159 41 51)</a>
+                <a href="https://wa.me/905521594151?text=${tamirWpMsg}" target="_blank" class="main-btn wa-btn" onclick="vibrate(); playClickSound();">💬 WhatsApp ile Servis Çağır</a>
             `;
-        } else {
-            let titles = { 'pvc': 'PVC Doğrama Sistemleri', 'cambalkon': 'Cam Balkon Sistemleri' };
-            let images = { 
-                'pvc': 'https://images.unsplash.com/photo-1503708998063-246a62e3d9f9?auto=format&fit=crop&w=600&q=80',
-                'cambalkon': 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=600&q=80'
-            };
+        } else if (type === 'cambalkon') {
+            document.getElementById('other-icon-wrap').innerHTML = otherIcons.cambalkon;
+            document.getElementById('other-title').innerText = 'Cam Balkon Sistemleri';
+            document.getElementById('other-desc').innerText = 'Cam Balkon sistemlerimiz için ölçü bildirmek veya fiyat teklifi almak üzere WhatsApp hatlarımızı kullanabilir ya da bizi doğrudan arayabilirsiniz.';
             
-            document.getElementById('other-title').innerText = titles[type] || '';
-            document.getElementById('other-desc').innerText = 'Bu kategoriye özel ölçü ve detaylı teklif almak için lütfen doğrudan WhatsApp hatlarımızdan iletişime geçiniz.';
+            let camWpMsg = encodeURIComponent("Merhaba Emin Pen, Cam Balkon sistemleri için fiyat teklifi almak istiyorum.");
             
-            let otherImg = document.getElementById('other-img');
-            if(images[type]) {
-                otherImg.src = images[type];
-                otherImg.style.display = 'block';
-            } else {
-                otherImg.style.display = 'none';
-            }
-
             document.getElementById('other-btn-group').innerHTML = `
-                <a href="https://wa.me/905516452606?text=Merhaba,%20fiyat%20bilgisi%20almak%20istiyorum." target="_blank" class="main-btn wa-btn">💬 WhatsApp ile Teklif Al</a>
+                <a href="tel:05457160686" class="main-btn call-btn" onclick="vibrate(); playClickSound();">📞 Telefon ile Ulaş (0545 716 06 86)</a>
+                <a href="https://wa.me/905457160686?text=${camWpMsg}" target="_blank" class="main-btn wa-btn" onclick="vibrate(); playClickSound();">💬 WhatsApp ile Teklif Al (0545 716 06 86)</a>
+            `;
+        } else if (type === 'pvc') {
+            document.getElementById('other-icon-wrap').innerHTML = otherIcons.pvc;
+            document.getElementById('other-title').innerText = 'PVC Doğrama Sistemleri';
+            document.getElementById('other-desc').innerText = 'PVC Doğrama / Pencere sistemleri için ölçü verip fiyat teklifi almak üzere doğrudan iletişime geçebilirsiniz.';
+            
+            let pvcWpMsg = encodeURIComponent("Merhaba Emin Pen, PVC Doğrama Sistemleri için fiyat teklifi almak istiyorum.");
+            
+            document.getElementById('other-btn-group').innerHTML = `
+                <a href="tel:05457160686" class="main-btn call-btn" onclick="vibrate(); playClickSound();">📞 Telefon ile Ulaş (0545 716 06 86)</a>
+                <a href="https://wa.me/905457160686?text=${pvcWpMsg}" target="_blank" class="main-btn wa-btn" onclick="vibrate(); playClickSound();">💬 WhatsApp ile Teklif Al (0545 716 06 86)</a>
             `;
         }
     }
 
     function showMenu() {
+        vibrate();
+        playClickSound();
         document.getElementById('sineklik-view').style.display = 'none';
         document.getElementById('dusakabin-view').style.display = 'none';
         document.getElementById('other-view').style.display = 'none';
@@ -425,7 +652,11 @@
         mentese: ["Beyaz", "Kahverengi", "Antrasit"]
     };
 
-    function addSineklik() {
+    function addSineklik(isSilent = false) {
+        vibrate();
+        if(!isSilent) {
+            playCashSound();
+        }
         itemCount++;
         const div = document.createElement('div');
         div.className = 'item-card';
@@ -437,7 +668,7 @@
             </div>
             
             <label>Sineklik Modeli</label>
-            <select class="type-select" onchange="updateColors(${itemCount}); calc();">
+            <select class="type-select" onchange="updateColors(${itemCount}); playClickSound(); calc();">
                 <option value="6.0" data-type="pilise">Piliseli (Demonte)</option>
                 <option value="7.5" data-type="pilise">Piliseli (Montajlı)</option>
                 <option value="2.5" data-type="mentese">Menteşeli (Demonte)</option>
@@ -447,7 +678,7 @@
             <div style="margin-top:10px;">
                 <label>Renk Seçimi</label>
                 <div class="color-select-box">
-                    <select class="color-select" onchange="changeColorIndicator(${itemCount}); calc();"></select>
+                    <select class="color-select" onchange="changeColorIndicator(${itemCount}); playClickSound(); calc();"></select>
                     <div class="color-indicator" id="color-ind-${itemCount}"></div>
                 </div>
             </div>
@@ -499,6 +730,9 @@
     }
 
     function remove(id) { 
+        vibrate();
+        playCashSound();
+        
         const el = document.getElementById(`item-${id}`);
         if(el) {
             el.classList.add('removing');
@@ -524,9 +758,11 @@
     }
 
     function resetAll() {
+        vibrate();
+        playClickSound();
         document.getElementById('itemList').innerHTML = '';
         itemCount = 0;
-        addSineklik();
+        addSineklik(true);
         calc();
     }
 
@@ -536,7 +772,7 @@
 
         const activeCards = document.querySelectorAll('#itemList .item-card:not(.removing)');
         activeCards.forEach((el, i) => {
-            let m = parseFloat(el.querySelector('.type-select').value);
+            let m = parseFloat(el.querySelector('.type-select').value) || 0;
             let modelName = el.querySelector('.type-select').options[el.querySelector('.type-select').selectedIndex].text;
             let selectedColor = el.querySelector('.color-select').value;
             let w = parseFloat(el.querySelector('.w').value) || 0;
@@ -562,7 +798,8 @@
         void totalBox.offsetWidth;
         totalBox.classList.add('updated');
 
-        let link = encodeURIComponent(msg + `\n*Genel Toplam: ${total.toLocaleString('tr-TR')} TL*`);
+        latestSineklikMsg = msg + `\n*Genel Toplam: ${total.toLocaleString('tr-TR')} TL*`;
+        let link = encodeURIComponent(latestSineklikMsg);
         document.getElementById('whatsappLink1').href = `https://wa.me/905516452606?text=${link}`;
         document.getElementById('whatsappLink2').href = `https://wa.me/905457160686?text=${link}`;
     }
@@ -571,21 +808,19 @@
     let currentDusaTab = 'mika';
 
     function switchDusaTab(tab) {
+        vibrate();
+        playClickSound();
         currentDusaTab = tab;
-        let previewImg = document.getElementById('dusa-preview-img');
-        
         if(tab === 'mika') {
             document.getElementById('tab-mika').classList.add('active');
             document.getElementById('tab-cam').classList.remove('active');
             document.getElementById('dusa-mika-form').style.display = 'block';
             document.getElementById('dusa-cam-form').style.display = 'none';
-            previewImg.src = "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=500&q=80";
         } else {
             document.getElementById('tab-cam').classList.add('active');
             document.getElementById('tab-mika').classList.remove('active');
             document.getElementById('dusa-mika-form').style.display = 'none';
             document.getElementById('dusa-cam-form').style.display = 'block';
-            previewImg.src = "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=500&q=80";
         }
         calcDusa();
     }
@@ -653,9 +888,24 @@
         }
         msg += `\n*Toplam Tutar: ${totalPrice.toLocaleString('tr-TR')} TL*`;
 
+        latestDusakabinMsg = msg;
         let link = encodeURIComponent(msg);
         document.getElementById('dusaWhatsappLink1').href = `https://wa.me/905516452606?text=${link}`;
         document.getElementById('dusaWhatsappLink2').href = `https://wa.me/905457160686?text=${link}`;
+    }
+
+    /* --- TEKLİF KOPYALAMA İŞLEVİ --- */
+    function copyOfferText(type) {
+        vibrate();
+        playSuccessSound();
+        let targetMsg = (type === 'sineklik') ? latestSineklikMsg : latestDusakabinMsg;
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(targetMsg).then(() => {
+                showToast("Teklif metni kopyalandı!");
+            });
+        } else {
+            showToast("Kopyalama desteklenmiyor.");
+        }
     }
 </script>
 
