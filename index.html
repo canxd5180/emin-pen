@@ -2,319 +2,196 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emin Pen - Demonte Sineklik Fiyat Hesaplama</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Emin Pen - Fiyat Hesaplama</title>
     <style>
+        :root {
+            --bg-color: #121212;         /* Siyah Arka Plan */
+            --card-bg: #1e1e1e;         /* Koyu Gri Kartlar */
+            --accent: #f38218;          /* Logodaki Turuncu/Bronz Rengi */
+            --text-main: #ffffff;
+            --text-sub: #b3b3b3;
+            --btn-text: #ffffff;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f4f6f9; color: #333; padding: 15px; display: flex; justify-content: center; }
-        .app-container { max-width: 500px; width: 100%; background: #ffffff; border-radius: 16px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        body { background-color: var(--bg-color); color: var(--text-main); padding: 15px 10px; display: flex; justify-content: center; }
         
-        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
-        .header h1 { color: #1e3a8a; font-size: 24px; font-weight: bold; }
-        .header p { color: #666; font-size: 14px; margin-top: 4px; }
-        
-        .item-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; margin-bottom: 15px; position: relative; }
-        .item-title { font-weight: bold; color: #1e293b; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        
-        .form-group { margin-bottom: 10px; }
-        label { display: block; font-size: 13px; color: #475569; margin-bottom: 4px; font-weight: 600; }
-        select, input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: white; }
-        select:focus, input:focus { border-color: #2563eb; outline: none; }
-        
-        .row { display: flex; gap: 10px; }
-        .row .form-group { flex: 1; }
+        .container { width: 100%; max-width: 450px; }
 
-        .item-price { font-size: 15px; font-weight: bold; color: #16a34a; margin-top: 8px; text-align: right; }
-        .remove-btn { background: #ef4444; color: white; border: none; border-radius: 6px; padding: 4px 8px; font-size: 12px; cursor: pointer; }
+        /* Banner ve Başlık Alanı */
+        .brand-header { 
+            text-align: center; 
+            margin-bottom: 20px; 
+            background: #000; 
+            padding: 15px; 
+            border-radius: 12px; 
+            border: 2px solid var(--accent);
+        }
+        .brand-header h1 { 
+            color: var(--accent); 
+            font-size: 32px; 
+            font-weight: 900; 
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .brand-header p { 
+            color: var(--text-sub); 
+            font-size: 11px; 
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        /* Sineklik Ekleme Kartları */
+        .item-card { 
+            background: var(--card-bg); 
+            border-left: 5px solid var(--accent); 
+            border-radius: 10px; 
+            padding: 15px; 
+            margin-bottom: 15px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
+        }
+        .item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .remove-btn { background: #dc2626; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; }
+
+        label { display: block; font-size: 12px; color: var(--text-sub); margin-bottom: 6px; font-weight: 600; }
+        select, input { 
+            width: 100%; 
+            padding: 12px; 
+            background: #2a2a2a; 
+            border: 1px solid #444; 
+            border-radius: 8px; 
+            color: white; 
+            font-size: 14px;
+            outline: none;
+        }
+        select:focus, input:focus { border-color: var(--accent); }
         
-        .add-btn { width: 100%; background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-bottom: 20px; transition: 0.2s; }
-        .add-btn:hover { background: #2563eb; }
+        /* Toplam Tutar Paneli */
+        .total-box { 
+            background: #000; 
+            border: 2px solid var(--accent); 
+            padding: 18px; 
+            border-radius: 12px; 
+            text-align: center; 
+            margin-bottom: 20px; 
+        }
+        .total-box span { font-size: 12px; color: var(--text-sub); font-weight: bold; }
+        .total-box h2 { font-size: 30px; color: var(--accent); margin-top: 4px; font-weight: bold; }
 
-        .total-box { background: #1e293b; color: white; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 15px; }
-        .total-box h2 { font-size: 22px; color: #4ade80; margin-top: 5px; }
-
-        .whatsapp-group { display: flex; flex-direction: column; gap: 10px; }
-        .whatsapp-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: #25d366; color: white; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 14px; text-align: center; }
-        .whatsapp-btn.line-2 { background: #128c7e; }
-        .whatsapp-btn:hover { opacity: 0.9; }
+        /* Buton Grupları */
+        .btn-group { display: flex; flex-direction: column; gap: 10px; }
+        .main-btn { 
+            width: 100%; 
+            padding: 14px; 
+            border: none; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            text-align: center; 
+            cursor: pointer; 
+            text-decoration: none; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px; 
+            font-size: 14px;
+        }
+        
+        .add-btn { background: #2a2a2a; color: var(--accent); border: 1.5px dashed var(--accent); margin-bottom: 15px; }
+        .wa-btn { background: #25d366; color: white; }
+        .wa-btn-2 { background: #128c7e; color: white; }
+        .insta-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div class="header">
-        <h1>EMİN PEN</h1>
-        <p>Demonte Sineklik Fiyat Hesaplama</p>
+<div class="container">
+    <!-- Logoya Uygun Kurumsal Başlık -->
+    <div class="brand-header">
+        <h1>EMİN-PEN</h1>
+        <p>İnşaat Plastik Sanayi ve Tic. Ltd. Şti.</p>
     </div>
 
     <div id="itemList"></div>
 
-    <button class="add-btn" onclick="addSineklik()">+ Yeni Sineklik Ekle</button>
+    <button class="main-btn add-btn" onclick="addSineklik()">+ YENİ SİNEKLİK EKLE</button>
 
     <div class="total-box">
         <span>GENEL TOPLAM TUTAR</span>
         <h2 id="grandTotal">0 TL</h2>
     </div>
 
-    <div class="whatsapp-group">
-        <a id="whatsappLink1" href="#" target="_blank" class="whatsapp-btn">
-            1. Hat ile Sipariş Ver (0545 716 06 86)
-        </a>
-        <a id="whatsappLink2" href="#" target="_blank" class="whatsapp-btn line-2">
-            2. Hat ile Sipariş Ver (0551 645 26 06)
-        </a>
+    <div class="btn-group">
+        <a id="whatsappLink1" href="#" target="_blank" class="main-btn wa-btn">💬 1. Hat Sipariş Ver (0545 716 06 86)</a>
+        <a id="whatsappLink2" href="#" target="_blank" class="main-btn wa-btn-2">💬 2. Hat Sipariş Ver (0551 645 26 06)</a>
+        <a href="https://instagram.com/eminpen51" target="_blank" class="main-btn insta-btn">📷 Instagram'da Bizi Takip Et (@eminpen51)</a>
     </div>
 </div>
 
 <script>
-    const PHONE_NUMBER_1 = "905457160686";
-    const PHONE_NUMBER_2 = "905516452606";
-
     let itemCount = 0;
-
-    window.onload = function() {
-        addSineklik();
-    };
+    window.onload = addSineklik;
 
     function addSineklik() {
         itemCount++;
-        const itemList = document.getElementById('itemList');
-        
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'item-card';
-        itemDiv.id = `item-${itemCount}`;
-        
-        itemDiv.innerHTML = `
-            <div class="item-title">
-                <span>Sineklik #${itemCount}</span>
-                ${itemCount > 1 ? `<button class="remove-btn" onclick="removeSineklik(${itemCount})">Sil</button>` : ''}
+        const div = document.createElement('div');
+        div.className = 'item-card';
+        div.id = `item-${itemCount}`;
+        div.innerHTML = `
+            <div class="item-header">
+                <strong>Sineklik #${itemCount}</strong>
+                ${itemCount > 1 ? `<button class="remove-btn" onclick="remove(${itemCount})">SİL</button>` : ''}
             </div>
-            <div class="form-group">
-                <label>Sineklik Modeli</label>
-                <select class="type-select" onchange="calculateTotal()">
-                    <option value="6.5">Piliseli (Demonte)</option>
-                    <option value="2.5">Menteşeli (Demonte)</option>
-                </select>
+            <label>Sineklik Modeli</label>
+            <select class="type-select" onchange="calc()">
+                <option value="6.5">Piliseli (Demonte)</option>
+                <option value="2.5">Menteşeli (Demonte)</option>
+            </select>
+            <div style="display:flex; gap:10px; margin-top:5px;">
+                <div style="flex:1"><label>En (cm)</label><input type="number" class="w" placeholder="100" oninput="calc()"></div>
+                <div style="flex:1"><label>Boy (cm)</label><input type="number" class="h" placeholder="200" oninput="calc()"></div>
             </div>
-            <div class="row">
-                <div class="form-group">
-                    <label>En (cm)</label>
-                    <input type="number" class="width-input" placeholder="Örn: 100" oninput="calculateTotal()">
-                </div>
-                <div class="form-group">
-                    <label>Boy (cm)</label>
-                    <input type="number" class="height-input" placeholder="Örn: 200" oninput="calculateTotal()">
-                </div>
+            <div style="text-align:right; color:var(--accent); font-weight:bold; margin-top:10px; font-size:15px;">
+                Tutar: <span class="price">0</span> TL
             </div>
-            <div class="item-price">Tutar: <span class="price-text">0</span> TL</div>
         `;
-
-        itemList.appendChild(itemDiv);
-        calculateTotal();
+        document.getElementById('itemList').appendChild(div);
+        calc();
     }
 
-    function removeSineklik(id) {
-        const item = document.getElementById(`item-${id}`);
-        if(item) {
-            item.remove();
-            calculateTotal();
-        }
+    function remove(id) { 
+        document.getElementById(`item-${id}`).remove(); 
+        calc(); 
     }
 
-    function calculateTotal() {
-        const items = document.querySelectorAll('.item-card');
-        let grandTotal = 0;
-        let whatsappMessage = "Merhaba Emin Pen, demonte sineklik teklifim:\n\n";
+    function calc() {
+        let total = 0;
+        let msg = "Merhaba Emin Pen, demonte sineklik sipariş teklifim:\n\n";
 
-        items.forEach((item, index) => {
-            const typeSelect = item.querySelector('.type-select');
-            const multiplier = parseFloat(typeSelect.value);
-            const modelName = typeSelect.options[typeSelect.selectedIndex].text;
+        document.querySelectorAll('.item-card').forEach((el, i) => {
+            let m = parseFloat(el.querySelector('.type-select').value);
+            let modelName = el.querySelector('.type-select').options[el.querySelector('.type-select').selectedIndex].text;
+            let w = parseFloat(el.querySelector('.w').value) || 0;
+            let h = parseFloat(el.querySelector('.h').value) || 0;
             
-            const width = parseFloat(item.querySelector('.width-input').value) || 0;
-            const height = parseFloat(item.querySelector('.height-input').value) || 0;
-
-            let itemTotal = 0;
-            if (width > 0 && height > 0) {
-                itemTotal = (width + height) * multiplier;
+            let p = 0;
+            if (w > 0 && h > 0) {
+                p = (w + h) * m;
             }
-
-            item.querySelector('.price-text').innerText = itemTotal.toLocaleString('tr-TR');
-            grandTotal += itemTotal;
-
-            if (width > 0 && height > 0) {
-                whatsappMessage += `${index + 1}. ${modelName} - Ölçü: ${width}x${height} cm - Tutar: ${itemTotal} TL\n`;
+            
+            el.querySelector('.price').innerText = p.toLocaleString('tr-TR');
+            total += p;
+            
+            if (w > 0 && h > 0) {
+                msg += `${i+1}. ${modelName} (${w}x${h} cm) - Tutar: ${p} TL\n`;
             }
         });
 
-        document.getElementById('grandTotal').innerText = grandTotal.toLocaleString('tr-TR') + " TL";
-        whatsappMessage += `\n*Genel Toplam: ${grandTotal} TL*`;
-
-        const encodedMessage = encodeURIComponent(whatsappMessage);
+        document.getElementById('grandTotal').innerText = total.toLocaleString('tr-TR') + " TL";
         
-        document.getElementById('whatsappLink1').href = `https://wa.me/${PHONE_NUMBER_1}?text=${encodedMessage}`;
-        document.getElementById('whatsappLink2').href = `https://wa.me/${PHONE_NUMBER_2}?text=${encodedMessage}`;
-    }
-</script>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emin Pen - Demonte Sineklik Fiyat Hesaplama</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f4f6f9; color: #333; padding: 15px; display: flex; justify-content: center; }
-        .app-container { max-width: 500px; width: 100%; background: #ffffff; border-radius: 16px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
-        
-        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
-        .header h1 { color: #1e3a8a; font-size: 24px; font-weight: bold; }
-        .header p { color: #666; font-size: 14px; margin-top: 4px; }
-        
-        .item-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; margin-bottom: 15px; position: relative; }
-        .item-title { font-weight: bold; color: #1e293b; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        
-        .form-group { margin-bottom: 10px; }
-        label { display: block; font-size: 13px; color: #475569; margin-bottom: 4px; font-weight: 600; }
-        select, input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: white; }
-        select:focus, input:focus { border-color: #2563eb; outline: none; }
-        
-        .row { display: flex; gap: 10px; }
-        .row .form-group { flex: 1; }
-
-        .item-price { font-size: 15px; font-weight: bold; color: #16a34a; margin-top: 8px; text-align: right; }
-        .remove-btn { background: #ef4444; color: white; border: none; border-radius: 6px; padding: 4px 8px; font-size: 12px; cursor: pointer; }
-        
-        .add-btn { width: 100%; background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-bottom: 20px; transition: 0.2s; }
-        .add-btn:hover { background: #2563eb; }
-
-        .total-box { background: #1e293b; color: white; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 15px; }
-        .total-box h2 { font-size: 22px; color: #4ade80; margin-top: 5px; }
-
-        .whatsapp-group { display: flex; flex-direction: column; gap: 10px; }
-        .whatsapp-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: #25d366; color: white; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 14px; text-align: center; }
-        .whatsapp-btn.line-2 { background: #128c7e; }
-        .whatsapp-btn:hover { opacity: 0.9; }
-    </style>
-</head>
-<body>
-
-<div class="app-container">
-    <div class="header">
-        <h1>EMİN PEN</h1>
-        <p>Demonte Sineklik Fiyat Hesaplama</p>
-    </div>
-
-    <div id="itemList"></div>
-
-    <button class="add-btn" onclick="addSineklik()">+ Yeni Sineklik Ekle</button>
-
-    <div class="total-box">
-        <span>GENEL TOPLAM TUTAR</span>
-        <h2 id="grandTotal">0 TL</h2>
-    </div>
-
-    <div class="whatsapp-group">
-        <a id="whatsappLink1" href="#" target="_blank" class="whatsapp-btn">
-            1. Hat ile Sipariş Ver (0545 716 06 86)
-        </a>
-        <a id="whatsappLink2" href="#" target="_blank" class="whatsapp-btn line-2">
-            2. Hat ile Sipariş Ver (0551 645 26 06)
-        </a>
-    </div>
-</div>
-
-<script>
-    const PHONE_NUMBER_1 = "905457160686";
-    const PHONE_NUMBER_2 = "905516452606";
-
-    let itemCount = 0;
-
-    window.onload = function() {
-        addSineklik();
-    };
-
-    function addSineklik() {
-        itemCount++;
-        const itemList = document.getElementById('itemList');
-        
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'item-card';
-        itemDiv.id = `item-${itemCount}`;
-        
-        itemDiv.innerHTML = `
-            <div class="item-title">
-                <span>Sineklik #${itemCount}</span>
-                ${itemCount > 1 ? `<button class="remove-btn" onclick="removeSineklik(${itemCount})">Sil</button>` : ''}
-            </div>
-            <div class="form-group">
-                <label>Sineklik Modeli</label>
-                <select class="type-select" onchange="calculateTotal()">
-                    <option value="6.5">Piliseli (Demonte)</option>
-                    <option value="2.5">Menteşeli (Demonte)</option>
-                </select>
-            </div>
-            <div class="row">
-                <div class="form-group">
-                    <label>En (cm)</label>
-                    <input type="number" class="width-input" placeholder="Örn: 100" oninput="calculateTotal()">
-                </div>
-                <div class="form-group">
-                    <label>Boy (cm)</label>
-                    <input type="number" class="height-input" placeholder="Örn: 200" oninput="calculateTotal()">
-                </div>
-            </div>
-            <div class="item-price">Tutar: <span class="price-text">0</span> TL</div>
-        `;
-
-        itemList.appendChild(itemDiv);
-        calculateTotal();
-    }
-
-    function removeSineklik(id) {
-        const item = document.getElementById(`item-${id}`);
-        if(item) {
-            item.remove();
-            calculateTotal();
-        }
-    }
-
-    function calculateTotal() {
-        const items = document.querySelectorAll('.item-card');
-        let grandTotal = 0;
-        let whatsappMessage = "Merhaba Emin Pen, demonte sineklik teklifim:\n\n";
-
-        items.forEach((item, index) => {
-            const typeSelect = item.querySelector('.type-select');
-            const multiplier = parseFloat(typeSelect.value);
-            const modelName = typeSelect.options[typeSelect.selectedIndex].text;
-            
-            const width = parseFloat(item.querySelector('.width-input').value) || 0;
-            const height = parseFloat(item.querySelector('.height-input').value) || 0;
-
-            let itemTotal = 0;
-            if (width > 0 && height > 0) {
-                itemTotal = (width + height) * multiplier;
-            }
-
-            item.querySelector('.price-text').innerText = itemTotal.toLocaleString('tr-TR');
-            grandTotal += itemTotal;
-
-            if (width > 0 && height > 0) {
-                whatsappMessage += `${index + 1}. ${modelName} - Ölçü: ${width}x${height} cm - Tutar: ${itemTotal} TL\n`;
-            }
-        });
-
-        document.getElementById('grandTotal').innerText = grandTotal.toLocaleString('tr-TR') + " TL";
-        whatsappMessage += `\n*Genel Toplam: ${grandTotal} TL*`;
-
-        const encodedMessage = encodeURIComponent(whatsappMessage);
-        
-        document.getElementById('whatsappLink1').href = `https://wa.me/${PHONE_NUMBER_1}?text=${encodedMessage}`;
-        document.getElementById('whatsappLink2').href = `https://wa.me/${PHONE_NUMBER_2}?text=${encodedMessage}`;
+        let link = encodeURIComponent(msg + `\n*Genel Toplam: ${total} TL*`);
+        document.getElementById('whatsappLink1').href = `https://wa.me/905457160686?text=${link}`;
+        document.getElementById('whatsappLink2').href = `https://wa.me/905516452606?text=${link}`;
     }
 </script>
 
