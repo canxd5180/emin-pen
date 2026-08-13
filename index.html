@@ -58,17 +58,24 @@
         .brand-header h1 { color: var(--accent); font-size: 28px; font-weight: 900; letter-spacing: 2px; }
         .brand-header p { color: var(--text-sub); font-size: 11px; margin-top: 2px; }
 
+        /* --- FOTOĞRAFLI KATEGORİ KARTLARI --- */
         .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .cat-card {
             background: var(--card-bg); border: 1px solid #333; border-bottom: 4px solid var(--accent);
-            padding: 22px 10px; border-radius: 14px; text-align: center; cursor: pointer;
+            border-radius: 14px; text-align: center; cursor: pointer; overflow: hidden;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); animation: cardPopIn 0.4s ease backwards;
+            display: flex; flex-direction: column; align-items: center;
         }
         .cat-card.full-width { grid-column: span 2; }
         .cat-card:active { transform: scale(0.92); }
         .cat-card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 6px 20px rgba(243, 130, 24, 0.25); }
-        .cat-icon { font-size: 32px; margin-bottom: 8px; display: block; }
-        .cat-title { font-size: 14px; font-weight: bold; color: var(--text-main); }
+        
+        .cat-img-box { width: 100%; height: 110px; overflow: hidden; background: #2a2a2a; position: relative; }
+        .cat-card.full-width .cat-img-box { height: 130px; }
+        .cat-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+        .cat-card:hover .cat-img { transform: scale(1.08); }
+        .cat-title-box { padding: 12px 8px; width: 100%; background: var(--card-bg); }
+        .cat-title { font-size: 13px; font-weight: bold; color: var(--text-main); display: block; }
 
         .item-card { 
             background: var(--card-bg); border-left: 5px solid var(--accent); 
@@ -86,7 +93,7 @@
         }
         select:focus, input:focus { border-color: var(--accent); }
 
-        /* TOGGLE & CHECKBOX STYLES */
+        /* TAB & PREVIEW STYLES */
         .tab-group { display: flex; gap: 8px; margin-bottom: 15px; }
         .tab-btn {
             flex: 1; padding: 10px; background: #2a2a2a; border: 1px solid #444; color: var(--text-sub);
@@ -98,7 +105,9 @@
         .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; color: var(--text-main); }
         .checkbox-item input { width: auto; }
 
-        /* RENK ÖNİZLEME DAİRESİ BİLEŞENİ */
+        .preview-img { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; border: 1px solid #333; }
+
+        /* RENK ÖNİZLEME DAİRESİ */
         .color-select-box { display: flex; align-items: center; gap: 10px; }
         .color-indicator { 
             width: 24px; height: 24px; border-radius: 50%; border: 2px solid #555; 
@@ -145,30 +154,56 @@
         <p>İnşaat Plastik Sanayi ve Tic. Ltd. Şti.</p>
     </div>
 
-    <!-- EKRAN 1: ANA KATEGORİ MENÜSÜ -->
+    <!-- EKRAN 1: ANA KATEGORİ MENÜSÜ (FOTOĞRAFLI) -->
     <div id="menu-view" class="animated-page">
         <label style="margin-bottom:12px; font-size:14px; text-align:center;">Lütfen İşlem Seçiniz:</label>
         <div class="category-grid">
+            
             <div class="cat-card" onclick="openCategory('sineklik')">
-                <span class="cat-icon">🦟</span>
-                <span class="cat-title">Sineklik Fiyat Al</span>
+                <div class="cat-img-box">
+                    <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80" alt="Sineklik" class="cat-img">
+                </div>
+                <div class="cat-title-box">
+                    <span class="cat-title">🦟 Sineklik Fiyat Al</span>
+                </div>
             </div>
+
             <div class="cat-card" onclick="openCategory('pvc')">
-                <span class="cat-icon">🪟</span>
-                <span class="cat-title">PVC Doğrama</span>
+                <div class="cat-img-box">
+                    <img src="https://images.unsplash.com/photo-1503708998063-246a62e3d9f9?auto=format&fit=crop&w=400&q=80" alt="PVC Doğrama" class="cat-img">
+                </div>
+                <div class="cat-title-box">
+                    <span class="cat-title">🪟 PVC Doğrama</span>
+                </div>
             </div>
+
             <div class="cat-card" onclick="openCategory('cambalkon')">
-                <span class="cat-icon">🏢</span>
-                <span class="cat-title">Cam Balkon</span>
+                <div class="cat-img-box">
+                    <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=400&q=80" alt="Cam Balkon" class="cat-img">
+                </div>
+                <div class="cat-title-box">
+                    <span class="cat-title">🏢 Cam Balkon</span>
+                </div>
             </div>
+
             <div class="cat-card" onclick="openCategory('tamir')">
-                <span class="cat-icon">🛠️</span>
-                <span class="cat-title">Tamir & Servis</span>
+                <div class="cat-img-box">
+                    <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=400&q=80" alt="Tamir Servis" class="cat-img">
+                </div>
+                <div class="cat-title-box">
+                    <span class="cat-title">🛠️ Tamir & Servis</span>
+                </div>
             </div>
+
             <div class="cat-card full-width" onclick="openCategory('dusakabin')">
-                <span class="cat-icon">🚿</span>
-                <span class="cat-title">Duşakabin Fiyat Al</span>
+                <div class="cat-img-box">
+                    <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80" alt="Duşakabin" class="cat-img">
+                </div>
+                <div class="cat-title-box">
+                    <span class="cat-title">🚿 Duşakabin Fiyat Al</span>
+                </div>
             </div>
+
         </div>
 
         <div class="btn-group" style="margin-top:20px;">
@@ -209,6 +244,9 @@
         </div>
 
         <div class="item-card">
+            <!-- Önizleme Görseli -->
+            <img id="dusa-preview-img" class="preview-img" src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=500&q=80" alt="Duşakabin Görseli">
+
             <!-- MİKA FORM -->
             <div id="dusa-mika-form">
                 <label>Model Çeşidi</label>
@@ -290,6 +328,7 @@
     <!-- EKRAN 4: DİĞER KATEGORİ BİLGİ ALANI -->
     <div id="other-view" style="display: none; text-align: center; padding: 20px 0;">
         <button class="main-btn back-btn" onclick="showMenu()">← Ana Menüye Dön</button>
+        <img id="other-img" src="" alt="Kategori Görseli" class="preview-img" style="display:none; height:200px;">
         <h3 id="other-title" style="color:var(--accent); margin-bottom:10px;"></h3>
         <p id="other-desc" style="color:var(--text-sub); font-size:14px; margin-bottom:20px;">
             Bu kategoriye özel ölçü ve detaylı teklif almak için lütfen doğrudan WhatsApp hatlarımızdan iletişime geçiniz.
@@ -326,6 +365,10 @@
             document.getElementById('other-title').innerText = 'Tamir & Servis Hizmeti';
             document.getElementById('other-desc').innerText = 'Tamir, bakım ve servis talepleriniz için doğrudan hattımızı arayabilir veya WhatsApp üzerinden ulaşabilirsiniz.';
             
+            let otherImg = document.getElementById('other-img');
+            otherImg.src = "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80";
+            otherImg.style.display = 'block';
+
             let tamirWpMsg = encodeURIComponent("Merhaba Emin Pen, Tamir ve Servis talebinde bulunmak istiyorum.");
             
             document.getElementById('other-btn-group').innerHTML = `
@@ -334,8 +377,22 @@
             `;
         } else {
             let titles = { 'pvc': 'PVC Doğrama Sistemleri', 'cambalkon': 'Cam Balkon Sistemleri' };
+            let images = { 
+                'pvc': 'https://images.unsplash.com/photo-1503708998063-246a62e3d9f9?auto=format&fit=crop&w=600&q=80',
+                'cambalkon': 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=600&q=80'
+            };
+            
             document.getElementById('other-title').innerText = titles[type] || '';
             document.getElementById('other-desc').innerText = 'Bu kategoriye özel ölçü ve detaylı teklif almak için lütfen doğrudan WhatsApp hatlarımızdan iletişime geçiniz.';
+            
+            let otherImg = document.getElementById('other-img');
+            if(images[type]) {
+                otherImg.src = images[type];
+                otherImg.style.display = 'block';
+            } else {
+                otherImg.style.display = 'none';
+            }
+
             document.getElementById('other-btn-group').innerHTML = `
                 <a href="https://wa.me/905516452606?text=Merhaba,%20fiyat%20bilgisi%20almak%20istiyorum." target="_blank" class="main-btn wa-btn">💬 WhatsApp ile Teklif Al</a>
             `;
@@ -515,16 +572,20 @@
 
     function switchDusaTab(tab) {
         currentDusaTab = tab;
+        let previewImg = document.getElementById('dusa-preview-img');
+        
         if(tab === 'mika') {
             document.getElementById('tab-mika').classList.add('active');
             document.getElementById('tab-cam').classList.remove('active');
             document.getElementById('dusa-mika-form').style.display = 'block';
             document.getElementById('dusa-cam-form').style.display = 'none';
+            previewImg.src = "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=500&q=80";
         } else {
             document.getElementById('tab-cam').classList.add('active');
             document.getElementById('tab-mika').classList.remove('active');
             document.getElementById('dusa-mika-form').style.display = 'none';
             document.getElementById('dusa-cam-form').style.display = 'block';
+            previewImg.src = "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=500&q=80";
         }
         calcDusa();
     }
