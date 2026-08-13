@@ -2,619 +2,619 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emin Pen - Fiyat Hesaplama & Teklif Sistemi</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Emin Pen - Dijital Katalog ve Hesaplama</title>
+    <meta name="theme-color" content="#121212">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
         :root {
-            --primary: #1e3c72;
-            --primary-dark: #112347;
-            --secondary: #00c6ff;
-            --accent: #f39c12;
-            --accent-gold: #d4af37;
-            --bg: #f4f7f6;
-            --card-bg: #ffffff;
-            --text: #2c3e50;
-            --border-radius: 16px;
-            --shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --accent: #f38218;
+            --text-main: #ffffff;
+            --text-sub: #b3b3b3;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding: 15px 10px; display: flex; justify-content: center; overflow-x: hidden; }
+        
+        .container { width: 100%; max-width: 450px; }
+
+        /* --- 1. GİRİŞ ANİMASYONU --- */
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 9999;
+            animation: fadeOutSplash 0.6s cubic-bezier(0.4, 0, 0.2, 1) 2.2s forwards;
+        }
+        .splash-logo {
+            font-size: 38px; font-weight: 900; color: var(--accent); letter-spacing: 4px;
+            animation: logoGlowPulse 1.8s infinite alternate ease-in-out, zoomInLogo 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .splash-sub { color: var(--text-sub); font-size: 11px; margin-top: 6px; letter-spacing: 2px; animation: fadeIn 1s ease 0.4s forwards; opacity: 0; }
+        .splash-loader { width: 140px; height: 3px; background: #222; margin-top: 25px; border-radius: 3px; overflow: hidden; }
+        .splash-loader-bar { width: 0%; height: 100%; background: var(--accent); animation: loadBar 1.8s cubic-bezier(0.65, 0, 0.35, 1) forwards; box-shadow: 0 0 10px var(--accent); }
+
+        @keyframes zoomInLogo { 0% { transform: scale(0.3); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes logoGlowPulse { 0% { text-shadow: 0 0 5px rgba(243, 130, 24, 0.2); } 100% { text-shadow: 0 0 20px rgba(243, 130, 24, 0.8); } }
+        @keyframes loadBar { 0% { width: 0%; } 100% { width: 100%; } }
+        @keyframes fadeOutSplash { 0% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; pointer-events: none; } }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(30px) scale(0.98); } to { opacity: 1; transform: translateX(0) scale(1); } }
+        @keyframes cardPopIn { 0% { opacity: 0; transform: translateY(20px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes cardRemove { 0% { opacity: 1; transform: translateX(0); max-height: 200px; } 100% { opacity: 0; transform: translateX(-100%); max-height: 0; margin: 0; padding: 0; } }
+        @keyframes pulseTotal { 0% { transform: scale(1); } 50% { transform: scale(1.03); border-color: #ffffff; } 100% { transform: scale(1); } }
+
+        .animated-page { animation: slideInRight 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+
+        /* PWA Banner */
+        #pwa-install-banner {
+            background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+            border: 1px solid var(--accent);
+            padding: 12px; border-radius: 12px; margin-bottom: 15px; text-align: center;
+            box-shadow: 0 4px 15px rgba(243, 130, 24, 0.15); animation: cardPopIn 0.5s ease;
         }
 
-        body {
-            background: linear-gradient(135deg, #eef2f3 0%, #8e9eab 100%);
-            min-height: 100vh;
-            color: var(--text);
-            padding: 20px 10px;
+        .brand-header { 
+            text-align: center; margin-bottom: 20px; background: #000; padding: 15px; 
+            border-radius: 12px; border: 2px solid var(--accent); box-shadow: 0 0 15px rgba(243, 130, 24, 0.2);
         }
+        .brand-header h1 { color: var(--accent); font-size: 28px; font-weight: 900; letter-spacing: 2px; }
+        .brand-header p { color: var(--text-sub); font-size: 11px; margin-top: 2px; }
 
-        .container {
-            max-width: 850px;
-            margin: 0 auto;
+        .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .cat-card {
+            background: var(--card-bg); border: 1px solid #333; border-bottom: 4px solid var(--accent);
+            padding: 22px 10px; border-radius: 14px; text-align: center; cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); animation: cardPopIn 0.4s ease backwards;
         }
+        .cat-card.full-width { grid-column: span 2; }
+        .cat-card:active { transform: scale(0.92); }
+        .cat-card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 6px 20px rgba(243, 130, 24, 0.25); }
+        .cat-icon { font-size: 32px; margin-bottom: 8px; display: block; }
+        .cat-title { font-size: 14px; font-weight: bold; color: var(--text-main); }
 
-        /* Header */
-        header {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            padding: 25px 20px;
-            border-radius: var(--border-radius);
-            text-align: center;
-            box-shadow: var(--shadow);
-            margin-bottom: 25px;
-            position: relative;
-            overflow: hidden;
+        .item-card { 
+            background: var(--card-bg); border-left: 5px solid var(--accent); 
+            border-radius: 12px; padding: 15px; margin-bottom: 15px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4); animation: cardPopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .item-card.removing { animation: cardRemove 0.4s forwards; }
+        .item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .remove-btn { background: #dc2626; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; }
 
-        header::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: rgba(255,255,255,0.05);
-            transform: rotate(30deg);
-            pointer-events: none;
+        label { display: block; font-size: 12px; color: var(--text-sub); margin-bottom: 6px; font-weight: 600; }
+        select, input { 
+            width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #444; 
+            border-radius: 8px; color: white; font-size: 14px; outline: none;
         }
+        select:focus, input:focus { border-color: var(--accent); }
 
-        header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-            color: #fff;
+        /* TOGGLE & CHECKBOX STYLES */
+        .tab-group { display: flex; gap: 8px; margin-bottom: 15px; }
+        .tab-btn {
+            flex: 1; padding: 10px; background: #2a2a2a; border: 1px solid #444; color: var(--text-sub);
+            border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; transition: all 0.3s; text-align: center;
         }
+        .tab-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
 
-        header p {
-            font-size: 14px;
-            opacity: 0.85;
-            font-weight: 300;
-        }
+        .checkbox-group { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+        .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; color: var(--text-main); }
+        .checkbox-item input { width: auto; }
 
-        /* Main Nav Buttons */
-        .category-nav {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
+        /* RENK ÖNİZLEME DAİRESİ BİLEŞENİ */
+        .color-select-box { display: flex; align-items: center; gap: 10px; }
+        .color-indicator { 
+            width: 24px; height: 24px; border-radius: 50%; border: 2px solid #555; 
+            box-shadow: 0 0 5px rgba(0,0,0,0.5); flex-shrink: 0; transition: background-color 0.3s, border-color 0.3s;
         }
+        
+        .total-box { background: #000; border: 2px solid var(--accent); padding: 18px; border-radius: 12px; text-align: center; margin-bottom: 20px; }
+        .total-box.updated { animation: pulseTotal 0.4s ease; }
+        .total-box h2 { font-size: 32px; color: var(--accent); margin-top: 4px; font-weight: bold; }
 
-        .cat-btn {
-            background: var(--card-bg);
-            border: 2px solid transparent;
-            padding: 18px 15px;
-            border-radius: var(--border-radius);
-            font-weight: 600;
-            font-size: 15px;
-            color: var(--primary);
-            cursor: pointer;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+        .btn-group { display: flex; flex-direction: column; gap: 10px; }
+        .action-row { display: flex; gap: 10px; margin-bottom: 15px; }
+        
+        .main-btn { 
+            width: 100%; padding: 14px; border: none; border-radius: 10px; font-weight: bold; 
+            text-align: center; cursor: pointer; text-decoration: none; display: flex; 
+            align-items: center; justify-content: center; gap: 8px; font-size: 14px;
         }
-
-        .cat-btn i {
-            font-size: 20px;
-            color: var(--accent);
-        }
-
-        .cat-btn:hover, .cat-btn.active {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border-color: rgba(255,255,255,0.3);
-            transform: translateY(-3px);
-        }
-
-        .cat-btn:hover i, .cat-btn.active i {
-            color: #fff;
-        }
-
-        /* Card Content Sections */
-        .content-card {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 30px;
-            box-shadow: var(--shadow);
-            display: none;
-            animation: fadeIn 0.4s ease-in-out forwards;
-        }
-
-        .content-card.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .section-title {
-            font-size: 20px;
-            color: var(--primary);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid var(--secondary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Tab Switcher for Dusakabin */
-        .sub-tab-container {
-            display: flex;
-            background: #eef2f5;
-            padding: 5px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-        }
-
-        .sub-tab {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.3s;
-            color: #666;
-        }
-
-        .sub-tab.active {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        /* Form Controls */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--text);
-        }
-
-        .form-control, select {
-            width: 100%;
-            padding: 14px;
-            border: 2px solid #e1e8ed;
-            border-radius: 10px;
-            font-size: 15px;
-            outline: none;
-            transition: 0.3s;
-            background: #fdfdfd;
-        }
-
-        .form-control:focus, select:focus {
-            border-color: var(--secondary);
-            box-shadow: 0 0 8px rgba(0, 198, 255, 0.2);
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        /* Gallery / Carousel Section */
-        .gallery-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin: 25px 0 15px 0;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .gallery-slider {
-            display: flex;
-            gap: 15px;
-            overflow-x: auto;
-            padding-bottom: 15px;
-            scroll-behavior: smooth;
-            border-radius: 12px;
-        }
-
-        .gallery-slider::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        .gallery-slider::-webkit-scrollbar-thumb {
-            background: var(--secondary);
-            border-radius: 10px;
-        }
-
-        .gallery-item {
-            flex: 0 0 200px;
-            height: 250px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            position: relative;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: 0.3s;
-        }
-
-        .gallery-item:hover img {
-            transform: scale(1.08);
-        }
-
-        /* Summary & Price Box */
-        .price-box {
-            background: linear-gradient(135deg, #112347, #1e3c72);
-            color: white;
-            padding: 25px;
-            border-radius: var(--border-radius);
-            margin-top: 25px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(30, 60, 114, 0.3);
-        }
-
-        .price-box h3 {
-            font-size: 16px;
-            opacity: 0.9;
-            font-weight: 400;
-        }
-
-        .price-box .amount {
-            font-size: 36px;
-            font-weight: 700;
-            color: #00ffcc;
-            margin: 10px 0;
-            letter-spacing: 1px;
-        }
-
-        /* Buttons */
-        .btn-whatsapp {
-            background: #25D366;
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
-        }
-
-        .btn-whatsapp:hover {
-            background: #1eb857;
-            transform: translateY(-2px);
-        }
-
-        /* Responsive */
-        @media (max-width: 600px) {
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
-            .category-nav {
-                grid-template-columns: 1fr 1fr;
-            }
-            .gallery-item {
-                flex: 0 0 160px;
-                height: 200px;
-            }
-        }
+        .main-btn:active { transform: scale(0.96); }
+        .add-btn { background: #2a2a2a; color: var(--accent); border: 1.5px dashed var(--accent); flex: 2; }
+        .reset-btn { background: #333; color: #ff5555; border: 1.5px solid #ff5555; flex: 1; }
+        .back-btn { background: #2a2a2a; color: white; margin-bottom: 15px; border: 1px solid #444; }
+        
+        .wa-btn { background: #25d366; color: white; }
+        .wa-btn-2 { background: #128c7e; color: white; }
+        .insta-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; }
+        .maps-btn { background: #4285F4; color: white; }
     </style>
 </head>
 <body>
 
+<div id="splash-screen">
+    <div class="splash-logo">EMİN-PEN</div>
+    <div class="splash-sub">İnşaat Plastik Sanayi ve Tic. Ltd. Şti.</div>
+    <div class="splash-loader"><div class="splash-loader-bar"></div></div>
+</div>
+
 <div class="container">
-    <header>
-        <h1>EMİN PEN</h1>
-        <p>Sineklik • PVC • Cam Balkon • Duşakabin Sistemleri</p>
-    </header>
-
-    <div class="category-nav">
-        <button class="cat-btn" onclick="openCategory('sineklik')">
-            <i class="fa-solid fa-bug"></i> Sineklik
-        </button>
-        <button class="cat-btn" onclick="openCategory('pvc')">
-            <i class="fa-solid fa-window-maximize"></i> PVC Sistem
-        </button>
-        <button class="cat-btn" onclick="openCategory('cambalkon')">
-            <i class="fa-solid fa-building-user"></i> Cam Balkon
-        </button>
-        <button class="cat-btn active" onclick="openCategory('dusakabin')">
-            <i class="fa-solid fa-shower"></i> Duşakabin Fiyat Al
+    
+    <div id="pwa-install-banner">
+        <span style="font-size:12px; color:var(--text-sub);">Uygulamaya Hızlı Erişim:</span>
+        <button onclick="installPWA()" class="main-btn" style="background:var(--accent); color:#000; margin-top:5px; padding:8px;">
+            📲 Ana Ekrana / Telefona Ekle
         </button>
     </div>
 
-    <div id="sineklik" class="content-card">
-        <div class="section-title"><i class="fa-solid fa-bug"></i> Pileli & Akordeon Sineklik</div>
-        <p style="color: #666; font-size:14px; margin-bottom:15px;">Pencere ve kapılarınız için ölçü girerek fiyat alabilirsiniz.</p>
-        <div class="grid-2">
-            <div class="form-group">
-                <label>En (cm)</label>
-                <input type="number" class="form-control" id="s_en" placeholder="Örn: 70" oninput="calculateSineklik()">
+    <div class="brand-header">
+        <h1>EMİN-PEN</h1>
+        <p>İnşaat Plastik Sanayi ve Tic. Ltd. Şti.</p>
+    </div>
+
+    <!-- EKRAN 1: ANA KATEGORİ MENÜSÜ -->
+    <div id="menu-view" class="animated-page">
+        <label style="margin-bottom:12px; font-size:14px; text-align:center;">Lütfen İşlem Seçiniz:</label>
+        <div class="category-grid">
+            <div class="cat-card" onclick="openCategory('sineklik')">
+                <span class="cat-icon">🦟</span>
+                <span class="cat-title">Sineklik Fiyat Al</span>
             </div>
-            <div class="form-group">
-                <label>Boy (cm)</label>
-                <input type="number" class="form-control" id="s_boy" placeholder="Örn: 120" oninput="calculateSineklik()">
+            <div class="cat-card" onclick="openCategory('pvc')">
+                <span class="cat-icon">🪟</span>
+                <span class="cat-title">PVC Doğrama</span>
+            </div>
+            <div class="cat-card" onclick="openCategory('cambalkon')">
+                <span class="cat-icon">🏢</span>
+                <span class="cat-title">Cam Balkon</span>
+            </div>
+            <div class="cat-card" onclick="openCategory('tamir')">
+                <span class="cat-icon">🛠️</span>
+                <span class="cat-title">Tamir & Servis</span>
+            </div>
+            <div class="cat-card full-width" onclick="openCategory('dusakabin')">
+                <span class="cat-icon">🚿</span>
+                <span class="cat-title">Duşakabin Fiyat Al</span>
             </div>
         </div>
-        <div class="price-box">
-            <h3>Tahmini Sineklik Tutarı</h3>
-            <div class="amount" id="sineklik_price">0 TL</div>
+
+        <div class="btn-group" style="margin-top:20px;">
+            <a href="https://instagram.com/eminpen51" target="_blank" class="main-btn insta-btn">📷 Instagram (@eminpen51)</a>
+            <a href="https://maps.app.goo.gl/2WEyD7jspvgbkfd46" target="_blank" class="main-btn maps-btn">📍 Konum ve Yol Tarifi</a>
         </div>
     </div>
 
-    <div id="pvc" class="content-card">
-        <div class="section-title"><i class="fa-solid fa-window-maximize"></i> PVC Doğrama Sistemleri</div>
-        <p style="color: #666; font-size:14px; margin-bottom:15px;">Pencere ve kapı ölçülerinize özel fiyat hesaplama.</p>
-        <div class="grid-2">
-            <div class="form-group">
-                <label>En (cm)</label>
-                <input type="number" class="form-control" placeholder="Örn: 150">
-            </div>
-            <div class="form-group">
-                <label>Boy (cm)</label>
-                <input type="number" class="form-control" placeholder="Örn: 140">
-            </div>
+    <!-- EKRAN 2: SİNEKLİK HESAPLAMA FORMU -->
+    <div id="sineklik-view" style="display: none;">
+        <button class="main-btn back-btn" onclick="showMenu()">← Ana Menüye Dön</button>
+        
+        <div id="itemList"></div>
+
+        <div class="action-row">
+            <button class="main-btn add-btn" onclick="addSineklik()">+ YENİ EKLE</button>
+            <button class="main-btn reset-btn" onclick="resetAll()">TEMİZLE</button>
         </div>
-        <div class="price-box">
-            <h3>Hesaplanan Fiyat</h3>
-            <div class="amount">Teklif Alınız</div>
+
+        <div class="total-box" id="totalBox">
+            <span>GENEL TOPLAM TUTAR</span>
+            <h2 id="grandTotal">0 TL</h2>
+        </div>
+
+        <div class="btn-group">
+            <a id="whatsappLink1" href="#" target="_blank" class="main-btn wa-btn">💬 1. Hat Sipariş Ver (0545 716 06 86)</a>
+            <a id="whatsappLink2" href="#" target="_blank" class="main-btn wa-btn-2">💬 2. Hat Sipariş Ver (0551 645 26 06)</a>
         </div>
     </div>
 
-    <div id="cambalkon" class="content-card">
-        <div class="section-title"><i class="fa-solid fa-building-user"></i> Katlanır Cam Balkon</div>
-        <p style="color: #666; font-size:14px; margin-bottom:15px;">Balkon ölçülerinizi giriniz.</p>
-        <div class="grid-2">
-            <div class="form-group">
-                <label>Toplam Genişlik (cm)</label>
-                <input type="number" class="form-control" placeholder="Örn: 350">
-            </div>
-            <div class="form-group">
-                <label>Yükseklik (cm)</label>
-                <input type="number" class="form-control" placeholder="Örn: 160">
-            </div>
-        </div>
-        <div class="price-box">
-            <h3>Hesaplanan Fiyat</h3>
-            <div class="amount">Teklif Alınız</div>
-        </div>
-    </div>
-
-    <div id="dusakabin" class="content-card active">
-        <div class="section-title"><i class="fa-solid fa-shower"></i> Duşakabin Fiyat Hesaplama</div>
-
-        <div class="sub-tab-container">
-            <div class="sub-tab active" id="tab-mika" onclick="switchDusaTab('mika')">Plastik Mika Kabin</div>
-            <div class="sub-tab" id="tab-cam" onclick="switchDusaTab('cam')">5 mm Temper Cam Kabin</div>
+    <!-- EKRAN 3: DUŞAKABİN HESAPLAMA FORMU -->
+    <div id="dusakabin-view" style="display: none;">
+        <button class="main-btn back-btn" onclick="showMenu()">← Ana Menüye Dön</button>
+        
+        <div class="tab-group">
+            <div id="tab-mika" class="tab-btn active" onclick="switchDusaTab('mika')">🔲 Plastik Mika</div>
+            <div id="tab-cam" class="tab-btn" onclick="switchDusaTab('cam')">💎 5 mm Temper Cam</div>
         </div>
 
-        <div id="mika-form">
-            <div class="grid-2">
-                <div class="form-group">
-                    <label>Kabin Tipi</label>
-                    <select id="mika_tip" onchange="calculateDusakabin()">
-                        <option value="duz">Düz / Kare Kabin</option>
-                        <option value="oval">Oval Kabin</option>
-                    </select>
-                </div>
-                <div class="form-group">
+        <div class="item-card">
+            <!-- MİKA FORM -->
+            <div id="dusa-mika-form">
+                <label>Model Çeşidi</label>
+                <select id="mika-model" onchange="calcDusa()">
+                    <option value="duzkare">Düz / Kare Mika</option>
+                    <option value="oval">Oval Mika</option>
+                </select>
+
+                <div style="margin-top:10px;">
                     <label>Profil Rengi</label>
-                    <select id="mika_renk" onchange="calculateDusakabin()">
+                    <select id="mika-profil" onchange="calcDusa()">
                         <option value="beyaz">Beyaz Profil</option>
-                        <option value="renkli">Eloksal / Siyah Renkli</option>
+                        <option value="renkli">Eloksal / Renkli Profil</option>
                     </select>
                 </div>
             </div>
 
-            <div class="gallery-title"><i class="fa-solid fa-images"></i> Mika Duşakabin Modellerimiz</div>
-            <div class="gallery-slider">
-                <div class="gallery-item"><img src="20849.jpg" alt="Mika Kabin"></div>
-                <div class="gallery-item"><img src="20899.jpg" alt="Mika Kabin"></div>
-                <div class="gallery-item"><img src="20912.jpg" alt="Mika Kabin"></div>
-                <div class="gallery-item"><img src="20914.jpg" alt="Mika Kabin"></div>
-                <div class="gallery-item"><img src="20916.jpg" alt="Mika Kabin"></div>
-                <div class="gallery-item"><img src="20918.jpg" alt="Mika Kabin"></div>
-                <div class="gallery-item"><img src="20919.jpg" alt="Mika Kabin"></div>
-                <div class="gallery-item"><img src="20920.jpg" alt="Mika Kabin"></div>
-                <div class="gallery-item"><img src="20921.jpg" alt="Mika Kabin"></div>
-                <div class="gallery-item"><img src="20926.jpg" alt="Mika Kabin"></div>
-            </div>
-        </div>
+            <!-- CAM FORM -->
+            <div id="dusa-cam-form" style="display:none;">
+                <label>Profil Rengi</label>
+                <select id="cam-profil" onchange="calcDusa()">
+                    <option value="eloksal">Eloksal (Gümüş)</option>
+                    <option value="altin">Altın Sarısı</option>
+                    <option value="antrasit">Antrasit Gri</option>
+                </select>
 
-        <div id="cam-form" style="display: none;">
-            <div class="grid-2">
-                <div class="form-group">
-                    <label>Profil Rengi</label>
-                    <select id="cam_renk" onchange="calculateDusakabin()">
-                        <option value="eloksal">Eloksal (Gümüş)</option>
-                        <option value="altin">Altın Sarısı</option>
-                        <option value="antrasit">Antrasit Gri</option>
+                <div style="margin-top:10px;">
+                    <label>Cam Tipi</label>
+                    <select id="cam-tipi" onchange="calcDusa()">
+                        <option value="seffaf">Şeffaf Cam</option>
+                        <option value="kumlama">Kumlama / Desenli Cam</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>Cam Desen / Tipi</label>
-                    <select id="cam_desen" onchange="calculateDusakabin()">
-                        <option value="seffaf">Şeffaf Cam (12.000 TL)</option>
-                        <option value="desenli">Kumlama / Desenli Cam (14.000 TL)</option>
-                    </select>
+
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="chk-karolaj" onchange="calcDusa()">
+                        Karolaj (Siyah Kare Çıtalı) (+1.500 TL)
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="chk-fume" onchange="calcDusa()">
+                        Füme Cam (+1.300 TL)
+                    </label>
                 </div>
             </div>
 
-            <div class="grid-2">
-                <div class="form-group">
-                    <label>Ekstra Özellikler</label>
-                    <select id="cam_ekstra" onchange="calculateDusakabin()">
-                        <option value="yok">Standart Cam</option>
-                        <option value="karolaj">Karolaj (Siyah Çıtalı) (+1.500 TL)</option>
-                        <option value="fume">Füme Cam (+1.300 TL)</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="gallery-title"><i class="fa-solid fa-images"></i> Cam Duşakabin Modellerimiz</div>
-            <div class="gallery-slider">
-                <div class="gallery-item"><img src="20870.jpg" alt="Cam Kabin"></div>
-                <div class="gallery-item"><img src="20857.jpg" alt="Cam Kabin"></div>
-                <div class="gallery-item"><img src="20874.jpg" alt="Cam Kabin"></div>
-                <div class="gallery-item"><img src="20877.jpg" alt="Cam Kabin"></div>
-                <div class="gallery-item"><img src="20878.jpg" alt="Cam Kabin"></div>
-                <div class="gallery-item"><img src="20889.jpg" alt="Cam Kabin"></div>
-                <div class="gallery-item"><img src="20892.jpg" alt="Cam Kabin"></div>
-                <div class="gallery-item"><img src="20894.jpg" alt="Cam Kabin"></div>
-                <div class="gallery-item"><img src="20897.jpg" alt="Cam Kabin"></div>
-                <div class="gallery-item"><img src="20859.jpg" alt="Cam Kabin"></div>
-            </div>
-        </div>
-
-        <div style="margin-top:20px; background:#f9fbfd; padding:15px; border-radius:12px; border:1px solid #e1e8ed;">
-            <div style="font-weight:600; margin-bottom:10px; color:var(--primary);">📏 Ölçü Bilgileri (100x100 cm ve altı standart fiyattır)</div>
-            <div class="grid-2">
-                <div class="form-group">
+            <!-- ORTAK ÖLÇÜ BİLGİLERİ -->
+            <div style="display:flex; gap:10px; margin-top:12px;">
+                <div style="flex:1">
                     <label>En (cm)</label>
-                    <input type="number" class="form-control" id="d_en" value="100" placeholder="100" oninput="calculateDusakabin()">
+                    <input type="number" id="dusa-w" inputmode="decimal" placeholder="100" value="100" oninput="calcDusa()">
                 </div>
-                <div class="form-group">
+                <div style="flex:1">
                     <label>Boy (cm)</label>
-                    <input type="number" class="form-control" id="d_boy" value="100" placeholder="100" oninput="calculateDusakabin()">
+                    <input type="number" id="dusa-h" inputmode="decimal" placeholder="100" value="100" oninput="calcDusa()">
                 </div>
+            </div>
+
+            <p style="font-size:11px; color:var(--text-sub); margin-top:8px;">
+                ℹ️ 100x100 cm ve altı standart fiyattır. 100 cm üzeri her 10 cm için +250 TL ilave hesaplanır.
+            </p>
+
+            <div style="text-align:right; color:var(--accent); font-weight:bold; margin-top:12px; font-size:16px;">
+                Tutar: <span id="dusaPrice">0</span> TL
             </div>
         </div>
 
-        <div class="price-box">
-            <h3>Hesaplanan Toplam Tutarlar</h3>
-            <div class="amount" id="dusa_price">7.250 TL</div>
-            <p style="font-size:12px; opacity:0.8;">*100x100 cm üzerindeki her 10 cm için +250 TL ilave edilmiştir.</p>
+        <div class="total-box" id="dusaTotalBox">
+            <span>HESAPLANAN TUTAR</span>
+            <h2 id="dusaGrandTotal">0 TL</h2>
         </div>
 
-        <button class="btn-whatsapp" onclick="sendWhatsApp()">
-            <i class="fa-brands fa-whatsapp"></i> WhatsApp İle Sipariş / Fiyat Al
-        </button>
+        <div class="btn-group">
+            <a id="dusaWhatsappLink1" href="#" target="_blank" class="main-btn wa-btn">💬 1. Hat Sipariş Ver (0545 716 06 86)</a>
+            <a id="dusaWhatsappLink2" href="#" target="_blank" class="main-btn wa-btn-2">💬 2. Hat Sipariş Ver (0551 645 26 06)</a>
+        </div>
     </div>
+
+    <!-- EKRAN 4: DİĞER KATEGORİ BİLGİ ALANI -->
+    <div id="other-view" style="display: none; text-align: center; padding: 20px 0;">
+        <button class="main-btn back-btn" onclick="showMenu()">← Ana Menüye Dön</button>
+        <h3 id="other-title" style="color:var(--accent); margin-bottom:10px;"></h3>
+        <p style="color:var(--text-sub); font-size:14px; margin-bottom:20px;">
+            Bu kategoriye özel ölçü ve detaylı teklif almak için lütfen doğrudan WhatsApp hatlarımızdan iletişime geçiniz.
+        </p>
+        <div class="btn-group">
+            <a href="https://wa.me/905457160686?text=Merhaba,%20fiyat%20bilgisi%20almak%20istiyorum." target="_blank" class="main-btn wa-btn">💬 WhatsApp ile Teklif Al</a>
+        </div>
+    </div>
+
 </div>
 
 <script>
-    let activeDusaType = 'mika';
+    function openCategory(type) {
+        document.getElementById('menu-view').style.display = 'none';
+        let targetView;
+        if (type === 'sineklik') {
+            targetView = document.getElementById('sineklik-view');
+        } else if (type === 'dusakabin') {
+            targetView = document.getElementById('dusakabin-view');
+        } else {
+            targetView = document.getElementById('other-view');
+        }
 
-    // Kategori Değişimi
-    function openCategory(catId) {
-        document.querySelectorAll('.content-card').forEach(card => card.classList.remove('active'));
-        document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-        
-        document.getElementById(catId).classList.add('active');
-        event.currentTarget.classList.add('active');
+        targetView.style.display = 'block';
+        targetView.classList.remove('animated-page');
+        void targetView.offsetWidth;
+        targetView.classList.add('animated-page');
+
+        if(type === 'sineklik') {
+            if(itemCount === 0) addSineklik();
+        } else if (type === 'dusakabin') {
+            calcDusa();
+        } else {
+            let titles = { 'pvc': 'PVC Doğrama Sistemleri', 'cambalkon': 'Cam Balkon Sistemleri', 'tamir': 'Tamir & Bakım Servisi' };
+            document.getElementById('other-title').innerText = titles[type] || '';
+        }
     }
 
-    // Duşakabin Tab Değişimi (Mika / Cam)
-    function switchDusaTab(type) {
-        activeDusaType = type;
-        if(type === 'mika') {
-            document.getElementById('mika-form').style.display = 'block';
-            document.getElementById('cam-form').style.display = 'none';
+    function showMenu() {
+        document.getElementById('sineklik-view').style.display = 'none';
+        document.getElementById('dusakabin-view').style.display = 'none';
+        document.getElementById('other-view').style.display = 'none';
+        let menuView = document.getElementById('menu-view');
+        menuView.style.display = 'block';
+        menuView.classList.remove('animated-page');
+        void menuView.offsetWidth;
+        menuView.classList.add('animated-page');
+    }
+
+    /* --- SİNEKLİK İŞLEMLERİ --- */
+    let itemCount = 0;
+    
+    const colorData = {
+        "Beyaz": { code: "#ffffff", icon: "⚪" },
+        "Kahverengi": { code: "#5c3a21", icon: "🟤" },
+        "Antrasit": { code: "#2c3539", icon: "⬛" },
+        "Vizon": { code: "#8b7d6b", icon: "🏽" }
+    };
+
+    const colorOptions = {
+        pilise: ["Beyaz", "Kahverengi", "Antrasit", "Vizon"],
+        mentese: ["Beyaz", "Kahverengi", "Antrasit"]
+    };
+
+    function addSineklik() {
+        itemCount++;
+        const div = document.createElement('div');
+        div.className = 'item-card';
+        div.id = `item-${itemCount}`;
+        div.innerHTML = `
+            <div class="item-header">
+                <strong class="item-title">Sineklik #${itemCount}</strong>
+                <button class="remove-btn" onclick="remove(${itemCount})" style="${itemCount === 1 ? 'display:none;' : ''}">SİL</button>
+            </div>
+            
+            <label>Sineklik Modeli</label>
+            <select class="type-select" onchange="updateColors(${itemCount}); calc();">
+                <option value="6.5" data-type="pilise">Piliseli (Demonte)</option>
+                <option value="7.5" data-type="pilise">Piliseli (Montajlı)</option>
+                <option value="2.5" data-type="mentese">Menteşeli (Demonte)</option>
+                <option value="3.5" data-type="mentese">Menteşeli (Montajlı)</option>
+            </select>
+
+            <div style="margin-top:10px;">
+                <label>Renk Seçimi</label>
+                <div class="color-select-box">
+                    <select class="color-select" onchange="changeColorIndicator(${itemCount}); calc();"></select>
+                    <div class="color-indicator" id="color-ind-${itemCount}"></div>
+                </div>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <div style="flex:1"><label>En (cm)</label><input type="number" inputmode="decimal" class="w" placeholder="100" oninput="calc()"></div>
+                <div style="flex:1"><label>Boy (cm)</label><input type="number" inputmode="decimal" class="h" placeholder="200" oninput="calc()"></div>
+            </div>
+            <div style="text-align:right; color:var(--accent); font-weight:bold; margin-top:10px; font-size:15px;">
+                Tutar: <span class="price">0</span> TL
+            </div>
+        `;
+        document.getElementById('itemList').appendChild(div);
+        updateColors(itemCount);
+        updateHeaderTitles();
+        calc();
+    }
+
+    function updateColors(id) {
+        const card = document.getElementById(`item-${id}`);
+        if(!card) return;
+        const typeSelect = card.querySelector('.type-select');
+        const colorSelect = card.querySelector('.color-select');
+        const selectedOption = typeSelect.options[typeSelect.selectedIndex];
+        const modelType = selectedOption.getAttribute('data-type');
+        
+        colorSelect.innerHTML = '';
+        colorOptions[modelType].forEach(colorName => {
+            const opt = document.createElement('option');
+            opt.value = colorName;
+            opt.innerText = `${colorData[colorName].icon} ${colorName}`;
+            colorSelect.appendChild(opt);
+        });
+        
+        changeColorIndicator(id);
+    }
+
+    function changeColorIndicator(id) {
+        const card = document.getElementById(`item-${id}`);
+        if(!card) return;
+        const colorSelect = card.querySelector('.color-select');
+        const indicator = document.getElementById(`color-ind-${id}`);
+        const selectedColorName = colorSelect.value;
+        
+        if(colorData[selectedColorName]) {
+            indicator.style.backgroundColor = colorData[selectedColorName].code;
+            indicator.style.borderColor = (selectedColorName === 'Beyaz') ? '#ffffff' : colorData[selectedColorName].code;
+        }
+    }
+
+    function remove(id) { 
+        const el = document.getElementById(`item-${id}`);
+        if(el) {
+            el.classList.add('removing');
+            setTimeout(() => {
+                el.remove();
+                updateHeaderTitles();
+                calc();
+            }, 380);
+        }
+    }
+
+    function updateHeaderTitles() {
+        const activeCards = document.querySelectorAll('.item-card:not(.removing)');
+        activeCards.forEach((card, index) => {
+            const title = card.querySelector('.item-title');
+            if (title) title.innerText = `Sineklik #${index + 1}`;
+            
+            const removeBtn = card.querySelector('.remove-btn');
+            if (removeBtn) {
+                removeBtn.style.display = (activeCards.length === 1) ? 'none' : 'block';
+            }
+        });
+    }
+
+    function resetAll() {
+        document.getElementById('itemList').innerHTML = '';
+        itemCount = 0;
+        addSineklik();
+        calc();
+    }
+
+    function calc() {
+        let total = 0;
+        let msg = "Merhaba Emin Pen, sineklik sipariş teklifim:\n\n";
+
+        const activeCards = document.querySelectorAll('#itemList .item-card:not(.removing)');
+        activeCards.forEach((el, i) => {
+            let m = parseFloat(el.querySelector('.type-select').value);
+            let modelName = el.querySelector('.type-select').options[el.querySelector('.type-select').selectedIndex].text;
+            let selectedColor = el.querySelector('.color-select').value;
+            let w = parseFloat(el.querySelector('.w').value) || 0;
+            let h = parseFloat(el.querySelector('.h').value) || 0;
+            
+            let p = 0;
+            if (w > 0 && h > 0) {
+                p = (w + h) * m;
+            }
+            
+            el.querySelector('.price').innerText = p.toLocaleString('tr-TR');
+            total += p;
+            
+            if (w > 0 && h > 0) {
+                msg += `${i+1}. ${modelName} - Renk: ${selectedColor} (${w}x${h} cm) - Tutar: ${p.toLocaleString('tr-TR')} TL\n`;
+            }
+        });
+
+        const totalBox = document.getElementById('totalBox');
+        document.getElementById('grandTotal').innerText = total.toLocaleString('tr-TR') + " TL";
+        
+        totalBox.classList.remove('updated');
+        void totalBox.offsetWidth;
+        totalBox.classList.add('updated');
+
+        let link = encodeURIComponent(msg + `\n*Genel Toplam: ${total.toLocaleString('tr-TR')} TL*`);
+        document.getElementById('whatsappLink1').href = `https://wa.me/905457160686?text=${link}`;
+        document.getElementById('whatsappLink2').href = `https://wa.me/905516452606?text=${link}`;
+    }
+
+    /* --- DUŞAKABİN İŞLEMLERİ --- */
+    let currentDusaTab = 'mika';
+
+    function switchDusaTab(tab) {
+        currentDusaTab = tab;
+        if(tab === 'mika') {
             document.getElementById('tab-mika').classList.add('active');
             document.getElementById('tab-cam').classList.remove('active');
+            document.getElementById('dusa-mika-form').style.display = 'block';
+            document.getElementById('dusa-cam-form').style.display = 'none';
         } else {
-            document.getElementById('mika-form').style.display = 'none';
-            document.getElementById('cam-form').style.display = 'block';
             document.getElementById('tab-cam').classList.add('active');
             document.getElementById('tab-mika').classList.remove('active');
+            document.getElementById('dusa-mika-form').style.display = 'none';
+            document.getElementById('dusa-cam-form').style.display = 'block';
         }
-        calculateDusakabin();
+        calcDusa();
     }
 
-    // DUŞAKABİN HESAPLAMA MANTIĞI
-    function calculateDusakabin() {
+    function calcDusa() {
         let basePrice = 0;
-        let en = parseFloat(document.getElementById('d_en').value) || 0;
-        let boy = parseFloat(document.getElementById('d_boy').value) || 0;
+        let details = "";
 
-        if (activeDusaType === 'mika') {
-            let tip = document.getElementById('mika_tip').value;
-            let renk = document.getElementById('mika_renk').value;
+        let w = parseFloat(document.getElementById('dusa-w').value) || 0;
+        let h = parseFloat(document.getElementById('dusa-h').value) || 0;
 
-            if (tip === 'duz') {
-                basePrice = (renk === 'beyaz') ? 7250 : 7750;
-            } else { // Oval
-                basePrice = (renk === 'beyaz') ? 7750 : 8000;
+        if (currentDusaTab === 'mika') {
+            let model = document.getElementById('mika-model').value;
+            let profil = document.getElementById('mika-profil').value;
+            let modelText = document.getElementById('mika-model').options[document.getElementById('mika-model').selectedIndex].text;
+            let profilText = document.getElementById('mika-profil').options[document.getElementById('mika-profil').selectedIndex].text;
+
+            if (model === 'duzkare') {
+                basePrice = (profil === 'beyaz') ? 7250 : 7750;
+            } else {
+                basePrice = (profil === 'beyaz') ? 7750 : 8000;
             }
-        } else { // Cam Kabin
-            let desen = document.getElementById('cam_desen').value;
-            let ekstra = document.getElementById('cam_ekstra').value;
 
-            basePrice = (desen === 'seffaf') ? 12000 : 14000;
-
-            if (ekstra === 'karolaj') basePrice += 1500;
-            if (ekstra === 'fume') basePrice += 1300;
-        }
-
-        // Ölçü Farkı Hesaplama (100 cm üzeri her 10 cm +250 TL)
-        let ekstraEn = en > 100 ? Math.ceil((en - 100) / 10) * 250 : 0;
-        let ekstraBoy = boy > 100 ? Math.ceil((boy - 100) / 10) * 250 : 0;
-
-        let totalPrice = basePrice + ekstraEn + ekstraBoy;
-
-        document.getElementById('dusa_price').innerText = totalPrice.toLocaleString('tr-TR') + ' TL';
-    }
-
-    // WhatsApp Sipariş Mesajı Oluşturma
-    function sendWhatsApp() {
-        let en = document.getElementById('d_en').value || '100';
-        let boy = document.getElementById('d_boy').value || '100';
-        let fiyat = document.getElementById('dusa_price').innerText;
-        let mesaj = "";
-
-        if(activeDusaType === 'mika') {
-            let tip = document.getElementById('mika_tip').selectedOptions[0].text;
-            let renk = document.getElementById('mika_renk').selectedOptions[0].text;
-            mesaj = `Merhaba Emin Pen, Mika Duşakabin için fiyat teklifi almak istiyorum:%0A%0A` +
-                    `• *Model:* Mika (${tip})%0A` +
-                    `• *Profil:* ${renk}%0A` +
-                    `• *Ölçü:* ${en} cm x ${boy} cm%0A` +
-                    `• *Hesaplanan Tutar:* ${fiyat}`;
+            details = `Model: ${modelText}\nProfil: ${profilText}`;
         } else {
-            let renk = document.getElementById('cam_renk').selectedOptions[0].text;
-            let desen = document.getElementById('cam_desen').selectedOptions[0].text;
-            let ekstra = document.getElementById('cam_ekstra').selectedOptions[0].text;
-            mesaj = `Merhaba Emin Pen, Cam Duşakabin için fiyat teklifi almak istiyorum:%0A%0A` +
-                    `• *Model:* 5mm Temper Cam%0A` +
-                    `• *Profil:* ${renk}%0A` +
-                    `• *Cam Tipi:* ${desen}%0A` +
-                    `• *Ekstra:* ${ekstra}%0A` +
-                    `• *Ölçü:* ${en} cm x ${boy} cm%0A` +
-                    `• *Hesaplanan Tutar:* ${fiyat}`;
+            let profilText = document.getElementById('cam-profil').options[document.getElementById('cam-profil').selectedIndex].text;
+            let camTipi = document.getElementById('cam-tipi').value;
+            let camText = document.getElementById('cam-tipi').options[document.getElementById('cam-tipi').selectedIndex].text;
+
+            basePrice = (camTipi === 'seffaf') ? 12000 : 14000;
+            details = `Profil Rengi: ${profilText}\nCam Tipi: ${camText}`;
+
+            if (document.getElementById('chk-karolaj').checked) {
+                basePrice += 1500;
+                details += `\nEkstra: Karolaj (Siyah Kare Çıtalı) (+1.500 TL)`;
+            }
+            if (document.getElementById('chk-fume').checked) {
+                basePrice += 1300;
+                details += `\nEkstra: Füme Cam (+1.300 TL)`;
+            }
         }
 
-        window.open(`https://wa.me/?text=${mesaj}`, '_blank');
+        // ÖLÇÜ FARKI HESAPLAMA (100 cm üzeri her 10 cm için +250 TL)
+        let extraOverW = Math.max(0, w - 100);
+        let extraOverH = Math.max(0, h - 100);
+        let extraSteps = Math.ceil(extraOverW / 10) + Math.ceil(extraOverH / 10);
+        let sizeExtra = extraSteps * 250;
+
+        let totalPrice = basePrice + sizeExtra;
+
+        document.getElementById('dusaPrice').innerText = totalPrice.toLocaleString('tr-TR');
+        document.getElementById('dusaGrandTotal').innerText = totalPrice.toLocaleString('tr-TR') + " TL";
+
+        const dusaTotalBox = document.getElementById('dusaTotalBox');
+        dusaTotalBox.classList.remove('updated');
+        void dusaTotalBox.offsetWidth;
+        dusaTotalBox.classList.add('updated');
+
+        // WHATSAPP MESAJI OLUŞTURMA
+        let tabTitle = (currentDusaTab === 'mika') ? 'Plastik Mika Duşakabin' : '5 mm Temper Cam Duşakabin';
+        let msg = `Merhaba Emin Pen, duşakabin sipariş teklifim:\n\n`;
+        msg += `*Kategori:* ${tabTitle}\n`;
+        msg += `${details}\n`;
+        msg += `*Ölçü:* ${w}x${h} cm\n`;
+        if (sizeExtra > 0) {
+            msg += `*Ölçü Farkı:* +${sizeExtra.toLocaleString('tr-TR')} TL\n`;
+        }
+        msg += `\n*Toplam Tutar: ${totalPrice.toLocaleString('tr-TR')} TL*`;
+
+        let link = encodeURIComponent(msg);
+        document.getElementById('dusaWhatsappLink1').href = `https://wa.me/905457160686?text=${link}`;
+        document.getElementById('dusaWhatsappLink2').href = `https://wa.me/905516452606?text=${link}`;
     }
 
-    // İlk açılışta hesapla
-    calculateDusakabin();
+    /* --- PWA KURULUMU --- */
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+    });
+
+    function installPWA() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                deferredPrompt = null;
+            });
+        } else {
+            alert("Ana ekrana eklemek için:\n\n1. Tarayıcınızın menü butonuna (üç nokta veya paylaş ikonu) tıklayın.\n2. 'Ana Ekrana Ekle' veya 'Kısayol Oluştur' seçeneğini seçin.");
+        }
+    }
 </script>
 
 </body>
