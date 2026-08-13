@@ -51,14 +51,6 @@
 
         .animated-page { animation: slideInRight 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
 
-        /* PWA Banner */
-        #pwa-install-banner {
-            background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
-            border: 1px solid var(--accent);
-            padding: 12px; border-radius: 12px; margin-bottom: 15px; text-align: center;
-            box-shadow: 0 4px 15px rgba(243, 130, 24, 0.15); animation: cardPopIn 0.5s ease;
-        }
-
         .brand-header { 
             text-align: center; margin-bottom: 20px; background: #000; padding: 15px; 
             border-radius: 12px; border: 2px solid var(--accent); box-shadow: 0 0 15px rgba(243, 130, 24, 0.2);
@@ -132,6 +124,7 @@
         
         .wa-btn { background: #25d366; color: white; }
         .wa-btn-2 { background: #128c7e; color: white; }
+        .call-btn { background: #3498db; color: white; }
         .insta-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; }
         .maps-btn { background: #4285F4; color: white; }
     </style>
@@ -145,14 +138,8 @@
 </div>
 
 <div class="container">
-    
-    <div id="pwa-install-banner">
-        <span style="font-size:12px; color:var(--text-sub);">Uygulamaya Hızlı Erişim:</span>
-        <button onclick="installPWA()" class="main-btn" style="background:var(--accent); color:#000; margin-top:5px; padding:8px;">
-            📲 Ana Ekrana / Telefona Ekle
-        </button>
-    </div>
 
+    <!-- EN ÜST BRAND HEADER -->
     <div class="brand-header">
         <h1>EMİN-PEN</h1>
         <p>İnşaat Plastik Sanayi ve Tic. Ltd. Şti.</p>
@@ -207,8 +194,8 @@
         </div>
 
         <div class="btn-group">
-            <a id="whatsappLink1" href="#" target="_blank" class="main-btn wa-btn">💬 1. Hat Sipariş Ver (0545 716 06 86)</a>
-            <a id="whatsappLink2" href="#" target="_blank" class="main-btn wa-btn-2">💬 2. Hat Sipariş Ver (0551 645 26 06)</a>
+            <a id="whatsappLink1" href="#" target="_blank" class="main-btn wa-btn">💬 1. Hat Sipariş Ver (0551 645 26 06)</a>
+            <a id="whatsappLink2" href="#" target="_blank" class="main-btn wa-btn-2">💬 2. Hat Sipariş Ver (0545 716 06 86)</a>
         </div>
     </div>
 
@@ -295,8 +282,8 @@
         </div>
 
         <div class="btn-group">
-            <a id="dusaWhatsappLink1" href="#" target="_blank" class="main-btn wa-btn">💬 1. Hat Sipariş Ver (0545 716 06 86)</a>
-            <a id="dusaWhatsappLink2" href="#" target="_blank" class="main-btn wa-btn-2">💬 2. Hat Sipariş Ver (0551 645 26 06)</a>
+            <a id="dusaWhatsappLink1" href="#" target="_blank" class="main-btn wa-btn">💬 1. Hat Sipariş Ver (0551 645 26 06)</a>
+            <a id="dusaWhatsappLink2" href="#" target="_blank" class="main-btn wa-btn-2">💬 2. Hat Sipariş Ver (0545 716 06 86)</a>
         </div>
     </div>
 
@@ -304,11 +291,11 @@
     <div id="other-view" style="display: none; text-align: center; padding: 20px 0;">
         <button class="main-btn back-btn" onclick="showMenu()">← Ana Menüye Dön</button>
         <h3 id="other-title" style="color:var(--accent); margin-bottom:10px;"></h3>
-        <p style="color:var(--text-sub); font-size:14px; margin-bottom:20px;">
+        <p id="other-desc" style="color:var(--text-sub); font-size:14px; margin-bottom:20px;">
             Bu kategoriye özel ölçü ve detaylı teklif almak için lütfen doğrudan WhatsApp hatlarımızdan iletişime geçiniz.
         </p>
-        <div class="btn-group">
-            <a href="https://wa.me/905457160686?text=Merhaba,%20fiyat%20bilgisi%20almak%20istiyorum." target="_blank" class="main-btn wa-btn">💬 WhatsApp ile Teklif Al</a>
+        <div class="btn-group" id="other-btn-group">
+            <a href="https://wa.me/905516452606?text=Merhaba,%20fiyat%20bilgisi%20almak%20istiyorum." target="_blank" class="main-btn wa-btn">💬 WhatsApp ile Teklif Al</a>
         </div>
     </div>
 
@@ -335,9 +322,23 @@
             if(itemCount === 0) addSineklik();
         } else if (type === 'dusakabin') {
             calcDusa();
+        } else if (type === 'tamir') {
+            document.getElementById('other-title').innerText = 'Tamir & Servis Hizmeti';
+            document.getElementById('other-desc').innerText = 'Tamir, bakım ve servis talepleriniz için doğrudan hattımızı arayabilir veya WhatsApp üzerinden ulaşabilirsiniz.';
+            
+            let tamirWpMsg = encodeURIComponent("Merhaba Emin Pen, Tamir ve Servis talebinde bulunmak istiyorum.");
+            
+            document.getElementById('other-btn-group').innerHTML = `
+                <a href="tel:05521594151" class="main-btn call-btn">📞 Tamir Hattını Ara (0552 159 41 51)</a>
+                <a href="https://wa.me/905521594151?text=${tamirWpMsg}" target="_blank" class="main-btn wa-btn">💬 WhatsApp ile Servis Çağır</a>
+            `;
         } else {
-            let titles = { 'pvc': 'PVC Doğrama Sistemleri', 'cambalkon': 'Cam Balkon Sistemleri', 'tamir': 'Tamir & Bakım Servisi' };
+            let titles = { 'pvc': 'PVC Doğrama Sistemleri', 'cambalkon': 'Cam Balkon Sistemleri' };
             document.getElementById('other-title').innerText = titles[type] || '';
+            document.getElementById('other-desc').innerText = 'Bu kategoriye özel ölçü ve detaylı teklif almak için lütfen doğrudan WhatsApp hatlarımızdan iletişime geçiniz.';
+            document.getElementById('other-btn-group').innerHTML = `
+                <a href="https://wa.me/905516452606?text=Merhaba,%20fiyat%20bilgisi%20almak%20istiyorum." target="_blank" class="main-btn wa-btn">💬 WhatsApp ile Teklif Al</a>
+            `;
         }
     }
 
@@ -380,7 +381,7 @@
             
             <label>Sineklik Modeli</label>
             <select class="type-select" onchange="updateColors(${itemCount}); calc();">
-                <option value="6.5" data-type="pilise">Piliseli (Demonte)</option>
+                <option value="6.0" data-type="pilise">Piliseli (Demonte)</option>
                 <option value="7.5" data-type="pilise">Piliseli (Montajlı)</option>
                 <option value="2.5" data-type="mentese">Menteşeli (Demonte)</option>
                 <option value="3.5" data-type="mentese">Menteşeli (Montajlı)</option>
@@ -505,8 +506,8 @@
         totalBox.classList.add('updated');
 
         let link = encodeURIComponent(msg + `\n*Genel Toplam: ${total.toLocaleString('tr-TR')} TL*`);
-        document.getElementById('whatsappLink1').href = `https://wa.me/905457160686?text=${link}`;
-        document.getElementById('whatsappLink2').href = `https://wa.me/905516452606?text=${link}`;
+        document.getElementById('whatsappLink1').href = `https://wa.me/905516452606?text=${link}`;
+        document.getElementById('whatsappLink2').href = `https://wa.me/905457160686?text=${link}`;
     }
 
     /* --- DUŞAKABİN İŞLEMLERİ --- */
@@ -566,7 +567,6 @@
             }
         }
 
-        // ÖLÇÜ FARKI HESAPLAMA (100 cm üzeri her 10 cm için +250 TL)
         let extraOverW = Math.max(0, w - 100);
         let extraOverH = Math.max(0, h - 100);
         let extraSteps = Math.ceil(extraOverW / 10) + Math.ceil(extraOverH / 10);
@@ -582,7 +582,6 @@
         void dusaTotalBox.offsetWidth;
         dusaTotalBox.classList.add('updated');
 
-        // WHATSAPP MESAJI OLUŞTURMA
         let tabTitle = (currentDusaTab === 'mika') ? 'Plastik Mika Duşakabin' : '5 mm Temper Cam Duşakabin';
         let msg = `Merhaba Emin Pen, duşakabin sipariş teklifim:\n\n`;
         msg += `*Kategori:* ${tabTitle}\n`;
@@ -594,26 +593,8 @@
         msg += `\n*Toplam Tutar: ${totalPrice.toLocaleString('tr-TR')} TL*`;
 
         let link = encodeURIComponent(msg);
-        document.getElementById('dusaWhatsappLink1').href = `https://wa.me/905457160686?text=${link}`;
-        document.getElementById('dusaWhatsappLink2').href = `https://wa.me/905516452606?text=${link}`;
-    }
-
-    /* --- PWA KURULUMU --- */
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-    });
-
-    function installPWA() {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult) => {
-                deferredPrompt = null;
-            });
-        } else {
-            alert("Ana ekrana eklemek için:\n\n1. Tarayıcınızın menü butonuna (üç nokta veya paylaş ikonu) tıklayın.\n2. 'Ana Ekrana Ekle' veya 'Kısayol Oluştur' seçeneğini seçin.");
-        }
+        document.getElementById('dusaWhatsappLink1').href = `https://wa.me/905516452606?text=${link}`;
+        document.getElementById('dusaWhatsappLink2').href = `https://wa.me/905457160686?text=${link}`;
     }
 </script>
 
